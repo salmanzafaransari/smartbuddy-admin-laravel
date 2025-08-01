@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create Account - Smart Buddy</title>
+    <title>Login Account - Smart Buddy</title>
 
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="{{ asset('assets/images/favicon.png') }}">
@@ -13,6 +13,11 @@
     <link href="{{ asset('vendor/fontawesome/css/all.min.css') }}" rel="stylesheet">
     <!-- Main CSS -->
     <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
+    <style>
+        .social-auth a{
+            text-decoration:none;
+        }
+    </style>
 </head>
 <body class="auth-body">
     <!-- Background Elements -->
@@ -72,13 +77,7 @@
                 </div>
 
                 <div class="form-check-row">
-                    <!-- <div class="form-check">
-                        <input class="form-check-input" type="checkbox" id="remember">
-                        <label class="form-check-label" for="remember">
-                            Remember me
-                        </label>
-                    </div> -->
-                    <a href="user-forgot-password.html" class="forgot-link">Forgot password?</a>
+                    <a href="{{ route('password.request') }}" class="forgot-link">Forgot password?</a>
                 </div>
 
                 <button type="submit" class="btn btn-primary btn-auth">
@@ -94,10 +93,10 @@
 
             <!-- Social Auth -->
             <div class="social-auth">
-                <button class="social-btn">
+                <a class="social-btn" href="{{ route('google.login') }}">
                     <i class="fab fa-google"></i>
                     Continue with Google
-                </button>
+                </a>
             </div>
 
             <!-- Auth Footer -->

@@ -13,6 +13,11 @@
     <link href="{{ asset('vendor/fontawesome/css/all.min.css') }}" rel="stylesheet">
     <!-- Main CSS -->
     <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
+    <style>
+        .social-auth a{
+            text-decoration:none;
+        }
+    </style>
 </head>
 <body class="auth-body">
     <!-- Background Elements -->
@@ -140,10 +145,10 @@
 
             <!-- Social Auth -->
             <div class="social-auth">
-                <button class="social-btn">
+                <a class="social-btn" href="{{ route('google.login') }}">
                     <i class="fab fa-google"></i>
                     Sign up with Google
-                </button>
+                </a>
             </div>
 
             <!-- Auth Footer -->
