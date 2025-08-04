@@ -7,6 +7,7 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\Auth\GoogleController;
+use App\Http\Controllers\ProfileController;
 
 // Auth::routes(['verify' => true]);
 
@@ -32,6 +33,13 @@ Route::post('/email/verification-notification', function (\Illuminate\Http\Reque
 Route::get('/dashboard', function () {
      return view('home');
 })->middleware(['auth', 'verified'])->name('dashboard');
+
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/profile', [ProfileController::class, 'profile'])->name('profile');
+    Route::get('/profile/edit-profile', [ProfileController::class, 'edit'])->name('editProfile');
+    Route::post('/profile/edit-profile', [ProfileController::class, 'update'])->name('profile.update');
+});
+
 
 // log in route start from here
 // Show login form

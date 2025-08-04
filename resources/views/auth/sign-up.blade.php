@@ -154,7 +154,7 @@
             <!-- Auth Footer -->
             <div class="auth-footer">
                 Already have an account? 
-                <a href="/log-in">Log in here</a>
+                <a href="/login">Log in here</a>
             </div>
         </div>
     </div>

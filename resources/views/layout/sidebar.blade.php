@@ -3,7 +3,7 @@
         <div class="sidebar-header">
             <div class="brand">
                 <i class="fas fa-brain brand-icon"></i>
-                <span class="brand-text">AIKIT</span>
+                <span class="brand-text">SmartBuddy</span>
             </div>
             <button class="sidebar-toggle d-lg-none" id="sidebarToggle">
                 <i class="fas fa-times"></i>

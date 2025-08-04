@@ -35,20 +35,23 @@
                 <h2>Verify Your Email</h2>
                 
             </div>
-            <div>
-              @if (session('message'))
-                   <div class="alert alert-success">{{ session('message') }}</div>
-               @endif
-
-               <p>We’ve sent a verification link to your email. Please check your inbox.</p>
-
+             <div class="success-message success-message-hidden" id="successMessage" style="display:block;">
+               <div class="success-icon">
+                   <i class="fas fa-check-circle"></i>
+               </div>
+               <h3>Check Your Email</h3>
+               <p>We've sent a password reset link to your email address. Please check your inbox.<br/>
+                  @if (session('message'))
+                    {{ session('message') }}
+                  @endif
+               </p>
                <form method="POST" action="{{ route('verification.send') }}">
                    @csrf
                    <button type="submit" class="btn btn-primary">Resend Verification Email</button>
                </form>
-            </div>
+             </div>
         </div>
     </div>
-    
+
 </body>
 </html>

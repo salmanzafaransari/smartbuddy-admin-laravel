@@ -1,4 +1,5 @@
 @extends('default')
+@section('pageTitle', 'Dashboard')
 @section('content')
 <!-- Dashboard Content -->
  <div class="content">
