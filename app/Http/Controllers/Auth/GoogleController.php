@@ -60,7 +60,7 @@ class GoogleController extends Controller
             ]
         );
 
-        Auth::login($user);
+        Auth::login($user, true);
         return redirect()->route('dashboard');
     }
 }

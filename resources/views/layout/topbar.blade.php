@@ -87,7 +87,7 @@
                     </div>
                     <i class="fas fa-chevron-right item-arrow"></i>
                 </a>
-                <a class="dropdown-item enhanced-item" href="/profile/edit-profile">
+                <a class="dropdown-item enhanced-item" href="{{route('editProfile')}}">
                     <div class="item-icon">
                         <i class="fas fa-edit"></i>
                     </div>
@@ -107,18 +107,8 @@
                     </div>
                     <i class="fas fa-chevron-right item-arrow"></i>
                 </a>
-                <div class="dropdown-divider"></div>
-                <a class="dropdown-item enhanced-item help-item" href="#" onclick="showHelpModal()">
-                    <div class="item-icon">
-                        <i class="fas fa-question-circle"></i>
-                    </div>
-                    <div class="item-content">
-                        <span class="item-title">Help & Support</span>
-                        <span class="item-subtitle">Get assistance</span>
-                    </div>
-                    <i class="fas fa-external-link-alt item-arrow"></i>
-                </a>
-                <a class="dropdown-item enhanced-item logout-item"
+                
+                <a class="dropdown-item enhanced-item logout-item mb-2"
                 href="#"
                 onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                     <div class="item-icon">

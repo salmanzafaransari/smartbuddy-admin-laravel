@@ -16,12 +16,18 @@
                 <div class="menu-section-title">Main</div>
                 <ul class="menu-items">
                     <li class="menu-item">
-                        <a href="index.html" class="menu-link active">
+                        <a href="{{ route('dashboard') }}" class="menu-link {{ request()->routeIs('dashboard') ? 'active' : '' }}">
                             <i class="fas fa-tachometer-alt menu-icon"></i>
-                            <span class="menu-text">Main Dashboard</span>
+                            <span class="menu-text">Dashboard</span>
                         </a>
                     </li>
                     <li class="menu-item">
+                        <a href="{{ route('chatbot') }}" class="menu-link {{ request()->routeIs('chatbot') ? 'active' : '' }}">
+                            <i class="fas fa-robot menu-icon"></i>
+                            <span class="menu-text">ChatBot</span>
+                        </a>
+                    </li>
+                    <!-- <li class="menu-item">
                         <a href="ai-analytics.html" class="menu-link">
                             <i class="fas fa-chart-line menu-icon"></i>
                             <span class="menu-text">Analytics Dashboard</span>
@@ -40,7 +46,7 @@
                             <span class="menu-text">AI CS Dashboard</span>
                             <span class="menu-badge success">New</span>
                         </a>
-                    </li>
+                    </li> -->
                 </ul>
             </div>
 
@@ -223,11 +229,11 @@
         <div class="sidebar-footer">
             <div class="user-info">
                 <div class="user-avatar">
-                    <i class="fas fa-user-circle"></i>
+                    <img src="{{ asset('' . (Auth::user()->profile_photo ?? 'user-avatar.jpg')) }}" alt="User Avatar" class="user-avatar-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
                 </div>
                 <div class="user-details">
-                    <div class="user-name">John Doe</div>
-                    <div class="user-role">Premium User</div>
+                    <div class="user-name" style="text-transform:capitalize;">{{Auth::user()->first_name}} {{Auth::user()->last_name}}</div>
+                    <!-- <div class="user-role">Premium User</div> -->
                 </div>
             </div>
         </div>

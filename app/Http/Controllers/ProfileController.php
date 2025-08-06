@@ -32,12 +32,27 @@ class ProfileController extends Controller
         if ($request->hasFile('profile_photo')) {
             $file = $request->file('profile_photo');
             $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
-            $file->move(public_path('assets/images'), $filename);
-            $user->profile_photo = 'assets/images/' . $filename;
+            $destinationPath = public_path('assets/images');
+            $newFilePath = 'assets/images/' . $filename;
+
+            // Delete old profile photo if exists and is not default
+            if ($user->profile_photo && file_exists(public_path($user->profile_photo))) {
+                // Optional: only delete if it's not a Google profile photo
+                if (str_contains($user->profile_photo, 'google_') || str_contains($user->profile_photo, '_')) {
+                    @unlink(public_path($user->profile_photo));
+                }
+            }
+
+            // Move new file
+            $file->move($destinationPath, $filename);
+
+            // Save new path
+            $user->profile_photo = $newFilePath;
             $user->save();
         }
 
-        return redirect()->route('editProfile')->with('success', 'Profile updated successfully.');
+
+        return redirect()->route('profile')->with('success', 'Profile updated successfully.');
     }
     public function profile(){
        $user = auth()->user();

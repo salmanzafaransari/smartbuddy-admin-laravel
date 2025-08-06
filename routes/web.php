@@ -8,6 +8,7 @@ use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\Auth\GoogleController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ChatbotController;
 
 // Auth::routes(['verify' => true]);
 
@@ -36,8 +37,11 @@ Route::get('/dashboard', function () {
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'profile'])->name('profile');
-    Route::get('/profile/edit-profile', [ProfileController::class, 'edit'])->name('editProfile');
-    Route::post('/profile/edit-profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('editProfile');
+    Route::post('/profile/edit', [ProfileController::class, 'update'])->name('profile.update');
+
+    Route::get('/chatbot', [ChatbotController::class, 'index'])->name('chatbot');
+    Route::post('/chatbots', [ChatbotController::class, 'store'])->name('chatbot.store');
 });
 
 

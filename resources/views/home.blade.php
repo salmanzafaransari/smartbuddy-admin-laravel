@@ -1,5 +1,6 @@
 @extends('default')
 @section('pageTitle', 'Dashboard')
+
 @section('content')
 <!-- Dashboard Content -->
  <div class="content">
@@ -178,4 +179,10 @@
          </div>
      </div>
  </div>
+ @endsection
+ @section('scripts')
+ <script src="{{ asset('assets/js/dashboard.js') }}"></script>
+ <script src="{{ asset('vendor/chartjs/chart.min.js') }}"></script>
+ <script src="{{ asset('assets/js/charts.js') }}"></script>
+ <!-- Chart.js -->
  @endsection

@@ -2,6 +2,21 @@
 @section('pageTitle', 'Profile')
 @section('pageAction')
 @endsection
+@section('style')
+<style>
+  .notification-toast {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 9999;
+      min-width: 250px;
+      max-width: 350px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      opacity: 1;
+  }
+</style>
+@endsection
+
 @section('content')
 <div class="content">
     <div class="row g-4">
@@ -98,17 +113,10 @@
                           </div>
                       </div>
                     </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-12">
-          <!-- Account Statistics -->
-          <div class="dashboard-card mt-4">
-              <div class="card-header">
-                  <h5 class="card-title">Account Statistics</h5>
-              </div>
-              <div class="card-body">
-                  <div class="row g-4">
+                    <div class="profile-stats">
+                     <h5 class="mb-4">Account Statistics</h5>
+                    </div>
+                    <div class="row g-4">
                       <div class="col-md-6">
                           <div class="stat-box">
                               <div class="stat-icon bg-primary">
@@ -131,10 +139,49 @@
                               </div>
                           </div>
                       </div>
-                  </div>
-              </div>
-          </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
+@endsection
+@section('scripts')
+@if(session('success'))
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const message = @json(session('success'));
+        const type = 'success';
+
+        const notification = document.createElement('div');
+        notification.className = `alert alert-${type} notification-toast`;
+        notification.style.transition = 'opacity 0.5s ease';
+
+        notification.innerHTML = `
+            <div class="d-flex align-items-center">
+                <i class="fas fa-${getNotificationIcon(type)} me-2"></i>
+                <span>${message}</span>
+                <button type="button" class="btn-close ms-auto" onclick="this.closest('.notification-toast').remove()"></button>
+            </div>
+        `;
+
+        document.body.appendChild(notification);
+
+        // Auto-fade and remove after 5 seconds
+        setTimeout(() => {
+            notification.style.opacity = '0';
+            setTimeout(() => notification.remove(), 500); // Wait for fade-out
+        }, 5000);
+
+        function getNotificationIcon(type) {
+            switch (type) {
+                case 'success': return 'check-circle';
+                case 'error': return 'times-circle';
+                case 'warning': return 'exclamation-circle';
+                default: return 'info-circle';
+            }
+        }
+    });
+</script>
+@endif
 @endsection

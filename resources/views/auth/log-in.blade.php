@@ -77,6 +77,12 @@
                 </div>
 
                 <div class="form-check-row">
+                    <div class="form-check">
+                        <input class="form-check-input" name="remember" type="checkbox" id="remember">
+                        <label class="form-check-label" for="remember">
+                            Remember me
+                        </label>
+                    </div>
                     <a href="{{ route('password.request') }}" class="forgot-link">Forgot password?</a>
                 </div>
 
