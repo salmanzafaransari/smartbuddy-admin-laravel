@@ -13,7 +13,10 @@
     <link href="{{ asset('vendor/fontawesome/css/all.min.css') }}" rel="stylesheet">
     
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}"> 
+    <link rel="stylesheet" href="{{ asset('assets/chatbot/chat-widget.css') }}">
+    <script src="{{ asset('assets/chatbot/chat-widget.js') }}"></script>
+
     @yield('style')
 </head>
 <body>

@@ -4,14 +4,15 @@
 <style>
  .notification-toast {
    position: fixed;
-   top: 20px;
-   right: 20px;
+   bottom: 20px;
+   left: 50%;
+   transform: translateX(-50%);
    z-index: 9999;
    min-width: 250px;
    max-width: 350px;
    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
    opacity: 1;
-  }
+}
  .img-box{
   width:80px;
   height:80px;
@@ -102,58 +103,6 @@
 @endsection
 @section('content')
 <div class="content">
-    <!-- Model Stats -->
-    <div class="row g-4 mb-5">
-        <div class="col-md-3">
-            <div class="stat-card">
-                <div class="stat-icon bg-primary">
-                    <i class="fas fa-robot"></i>
-                </div>
-                <div class="stat-content">
-                    <h3 class="stat-number">24</h3>
-                    <p class="stat-label">Active Models</p>
-                    <span class="stat-change positive">+3 this month</span>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="stat-card">
-                <div class="stat-icon bg-success">
-                    <i class="fas fa-check-circle"></i>
-                </div>
-                <div class="stat-content">
-                    <h3 class="stat-number">18</h3>
-                    <p class="stat-label">Running</p>
-                    <span class="stat-change positive">+2 today</span>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="stat-card">
-                <div class="stat-icon bg-warning">
-                    <i class="fas fa-pause-circle"></i>
-                </div>
-                <div class="stat-content">
-                    <h3 class="stat-number">4</h3>
-                    <p class="stat-label">Paused</p>
-                    <span class="stat-change neutral">No change</span>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="stat-card">
-                <div class="stat-icon bg-danger">
-                    <i class="fas fa-exclamation-triangle"></i>
-                </div>
-                <div class="stat-content">
-                    <h3 class="stat-number">2</h3>
-                    <p class="stat-label">Issues</p>
-                    <span class="stat-change negative">+1 today</span>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <!-- Models Grid -->
     <div class="models-container" id="modelsContainer">
         <div class="row g-4  justify-content-center">
@@ -166,7 +115,7 @@
                             <div class="model-body">
                                 <div class="w-100 d-flex justify-content-center">
                                     <div class="img-box">
-                                        <img src="{{ $bot->chatbot_photo }}" alt="Chatbot Image" />
+                                        <img src="{{ $bot->chatbot_photo ?? asset('assets/images/favicon.png') }}" alt="Chatbot Image" />
                                     </div>
                                 </div>
                                 <h5 class="model-name mt-3 text-center">{{ $bot->name }}</h5>
@@ -185,14 +134,14 @@
                                 </div>
                             </div>
                             <div class="model-actions justify-content-center">
-                                <button class="btn btn-sm btn-outline-primary p-2" onclick="configureModel('{{ $bot->id }}')">
-                                    <i class="fas fa-edit"></i> Edit &nbsp;
+                                <button class="btn btn-sm btn-outline-primary p-2" onclick="editModel('{{ $bot->id }}')">
+                                    <i class="fas fa-edit"></i> Edit
                                 </button>
-                                <button class="btn btn-sm btn-outline-success p-2">
-                                    <i class="fas fa-play"></i> Test &nbsp;
-                                </button>
+                                <a href="{{ route('chatbot.configure', $bot->id) }}" class="btn btn-sm btn-outline-success p-2">
+                                    <i class="fas fa-cog"></i> Configure
+                                </a>
                                 <button class="btn btn-sm btn-outline-danger p-2" onclick="deleteModel('{{ $bot->id }}')">
-                                    <i class="fas fa-trash"></i> Delete &nbsp;
+                                    <i class="fas fa-trash"></i> Delete
                                 </button>
                             </div>
                         </div>
@@ -204,57 +153,6 @@
                 @endforelse
             </div>
 
-
-            <!-- Error Model -->
-            <!-- <div class="col-lg-4 col-md-6 model-item" data-category="text">
-                <div class="model-card error">
-                    <div class="model-header">
-                        <div class="model-icon bg-danger">
-                            <i class="fas fa-exclamation-triangle"></i>
-                        </div>
-                        <div class="model-status">
-                            <span class="status-badge error">Error</span>
-                        </div>
-                    </div>
-                    <div class="model-body">
-                        <h5 class="model-name">Legacy GPT-3</h5>
-                        <p class="model-description">Older generation language model with basic text capabilities.</p>
-                        <div class="model-stats">
-                            <div class="stat-item">
-                                <span class="stat-label">Last Used</span>
-                                <span class="stat-value">2 days ago</span>
-                            </div>
-                            <div class="stat-item">
-                                <span class="stat-label">Error</span>
-                                <span class="stat-value text-danger">API Timeout</span>
-                            </div>
-                        </div>
-                        <div class="model-tags">
-                            <span class="tag">Legacy</span>
-                            <span class="tag">Deprecated</span>
-                        </div>
-                    </div>
-                    <div class="model-actions">
-                        <button class="btn btn-sm btn-outline-warning" onclick="restartModel('legacy-gpt3')">
-                            <i class="fas fa-redo"></i> Restart
-                        </button>
-                        <button class="btn btn-sm btn-outline-info" onclick="viewLogs('legacy-gpt3')">
-                            <i class="fas fa-file-alt"></i> Logs
-                        </button>
-                        <div class="dropdown">
-                            <button class="btn btn-sm btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown">
-                                <i class="fas fa-ellipsis-v"></i>
-                            </button>
-                            <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="#"><i class="fas fa-info"></i> Details</a></li>
-                                <li><a class="dropdown-item" href="#"><i class="fas fa-wrench"></i> Troubleshoot</a></li>
-                                <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item text-danger" href="#"><i class="fas fa-trash"></i> Delete</a></li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div> -->
         </div>
     </div>
 </div>
@@ -275,11 +173,11 @@
                         <div class="col-md-6">
                             <div class="card-body text-center">
                                 <div class="profile-avatar mb-3">
-                                    <img width="100" src="{{ asset('assets/images/user-avatar.jpg') }}" alt="Profile" class="rounded-circle" id="profileImage">
-                                    <button type="button" class="btn btn-sm btn-primary avatar-edit" onclick="document.getElementById('imageUpload').click()">
+                                    <img width="100" src="{{ asset('assets/images/favicon.png') }}" alt="Profile" class="rounded-circle" id="profileImage">
+                                    <button type="button" class="btn btn-sm btn-primary bg-gredient avatar-edit" onclick="document.getElementById('imageUpload').click()">
                                         <i class="fas fa-camera"></i>
                                     </button>
-                                    <input type="file" name="chatbot_photo" id="imageUpload" accept="image/*" style="display: none;" required>
+                                    <input type="file" name="chatbot_photo" id="imageUpload" accept="image/*" style="display: none;">
                                 </div>
                                 <p class="text-muted">Upload a Chatbot image. JPG or PNG only.</p>
                             </div>
@@ -358,6 +256,92 @@
         </div>
     </div>
 </div>
+<!-- Edit Model Modal -->
+<div class="modal fade" id="editModelModal" tabindex="-1">
+  <div class="modal-dialog modal-lg modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Edit ChatBot</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <form id="editModelForm" method="POST" enctype="multipart/form-data">
+          @csrf
+          @method('PUT')
+          <input type="hidden" id="editBotId">
+
+          <div class="row g-3">
+            <!-- Avatar -->
+            <div class="col-md-12">
+              <div class="card-body text-center">
+                <div class="profile-avatar">
+                  <img width="100" src="{{ asset('assets/images/favicon.png') }}" alt="Profile" class="rounded-circle" id="editProfileImage">
+                  <button type="button" class="btn btn-sm btn-primary bg-gredient avatar-edit" onclick="document.getElementById('editImageUpload').click()">
+                    <i class="fas fa-camera"></i>
+                  </button>
+                  <input type="file" name="chatbot_photo" id="editImageUpload" accept="image/*" style="display: none;">
+                </div>
+                <p class="text-muted">Upload new image (optional).</p>
+              </div>
+            </div>
+
+            <!-- Name -->
+            <div class="col-md-12">
+             <label for="editModelName" class="form-label">Chatbot Name</label>
+             <input type="text" name="name" class="form-control" id="editModelName" required>
+            </div>
+            <!-- Type -->
+            <div class="col-md-12">
+              <label for="editBusinessTypeSelect" class="form-label mt-3">Chatbot Type</label>
+              <select name="type" class="form-control" id="editBusinessTypeSelect" required>
+                <option value="">Select Business Type</option>
+                <optgroup label="Education">
+                  <option value="school">School</option>
+                  <option value="college">College</option>
+                  <option value="online-learning">Online Learning</option>
+                  <option value="tutoring">Tutoring</option>
+                </optgroup>
+                <optgroup label="Healthcare">
+                  <option value="hospital">Hospital</option>
+                  <option value="telemedicine">Telemedicine</option>
+                  <option value="mental-health">Mental Health</option>
+                  <option value="pharmacy">Pharmacy</option>
+                </optgroup>
+                <optgroup label="E-Commerce & Retail">
+                  <option value="ecommerce">Online Store</option>
+                  <option value="fashion">Fashion Brand</option>
+                  <option value="electronics">Electronics</option>
+                  <option value="local-shop">Local Shop</option>
+                </optgroup>
+                <optgroup label="Finance">
+                  <option value="bank">Bank</option>
+                  <option value="fintech">FinTech App</option>
+                  <option value="insurance">Insurance</option>
+                </optgroup>
+                <optgroup label="Others">
+                  <option value="hospitality">Hospitality</option>
+                  <option value="real-estate">Real Estate</option>
+                  <option value="legal">Legal</option>
+                  <option value="tech">Tech/SaaS</option>
+                  <option value="entertainment">Entertainment</option>
+                  <option value="government">Government</option>
+                  <option value="custom">Other</option>
+                </optgroup>
+              </select>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button type="submit" form="editModelForm" class="btn btn-primary" id="editSubmitBtn">
+          <span class="spinner-border spinner-border-sm me-2 d-none" id="editSpinner"></span>
+          <span id="editSubmitText">Update Chatbot</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
 
 <!-- Custom Business Modal -->
 <div class="modal fade" id="customBusinessModal" tabindex="-1">
@@ -387,85 +371,159 @@
         </div>
     </div>
 </div>
+<!-- Confirmation Modal -->
+<div class="modal fade" id="confirmModal" tabindex="-1">
+    <div class="modal-dialog  modal-dialog-centered modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Confirm Delete</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete this chatbot?</p>
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <form id="deleteForm" method="POST" action="">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="btn btn-danger">Confirm</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 
 @endsection
 @section('scripts')
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js" integrity="sha512-2ImtlRlf2VVmiGZsjm9bEyhjGW4dU7B6TNwh/hx/iSByxNENtj3WVE6o/9Lj4TJeVXPi4bnOIMXFIJJAeufa0A==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script>
- jQuery(document).ready(function($) {
-     const form = document.querySelector('#addModelForm');
-     const submitBtn = document.querySelector('#submitBtn');
-     const spinner = document.querySelector('#spinner');
-     const submitText = document.querySelector('#submitText');
+let previousEditModelName = '';
 
-     if (form) {
-         form.addEventListener('submit', function () {
-             spinner.classList.remove('d-none');
-             submitText.textContent = 'Submitting...';
-             submitBtn.setAttribute('disabled', true);
-         });
-     }
+jQuery(document).ready(function($) {
+    const form = document.querySelector('#addModelForm');
+    const submitBtn = document.querySelector('#submitBtn');
+    const spinner = document.querySelector('#spinner');
+    const submitText = document.querySelector('#submitText');
 
-     const $businessSelect = $('#businessTypeselect');
-     
-     // Initialize Select2 with proper configuration
-     $businessSelect.select2({
-         placeholder: "Select Business Type",
-         width: '100%',
-         dropdownParent: $('#addModelModal'),
-         allowClear: true,
-         dropdownAutoWidth: true,
-         closeOnSelect: true
-     });
+    if (form) {
+        form.addEventListener('submit', function () {
+            spinner.classList.remove('d-none');
+            submitText.textContent = 'Submitting...';
+            submitBtn.setAttribute('disabled', true);
+        });
+    }
 
-     // Handle custom option selection
-     $businessSelect.on('select2:select', function(e) {
-         // Check if "Other (Specify)..." was selected
-         if (e.params.data.id === 'custom') {
-             // Reset the selection
-             $businessSelect.val(null).trigger('change');
-             
-             // Show custom input modal
-             $('#customBusinessModal').modal('show');
-             
-             // Clear any previous input and focus
-             $('#customBusinessInput').val('').focus();
-         }
-     });
+    // ADD form select2
+    const $businessSelect = $('#businessTypeselect');
+    $businessSelect.select2({
+        placeholder: "Select Business Type",
+        width: '100%',
+        dropdownParent: $('#addModelModal'),
+        allowClear: true,
+        dropdownAutoWidth: true,
+        closeOnSelect: true
+    });
 
-     // Save custom business type
-     $('#saveCustomBusiness').click(function() {
-         const customValue = $('#customBusinessInput').val().trim();
-         
-         if (customValue) {
-             // Create new option (both value and text same)
-             const newOption = new Option(customValue, customValue, true, true);
-             
-             // Add it before the "Other (Specify)..." option
-             $businessSelect.find('option[value="custom"]').before(newOption);
-             $businessSelect.trigger('change');
-             
-             // Select the new option
-             $businessSelect.val(customValue).trigger('change');
-             
-             // Close modal
-             $('#customBusinessModal').modal('hide');
-         } else {
-             // Show validation error
-             $('#customBusinessInput').addClass('is-invalid');
-         }
-     });
+    $businessSelect.on('select2:select', function(e) {
+        if (e.params.data.id === 'custom') {
+            $businessSelect.val(null).trigger('change');
+            $('#customBusinessModal').modal('show');
+            $('#customBusinessInput').val('').focus();
+        }
+    });
 
-     // Clear validation when typing
-     $('#customBusinessInput').on('input', function() {
-         $(this).removeClass('is-invalid');
-     });
-     // var val = $businessSelect.val();
-     // $('#businessTypeselect').on('change', function(e){
-     //  const selectedValue = $('#businessTypeselect').val();
-     //  console.log(selectedValue, 'jsldjflkdjflkdj');
-     // })
- });
+    // EDIT form select2
+    const $editBusinessSelect = $('#editBusinessTypeSelect');
+    $editBusinessSelect.select2({
+        placeholder: "Select Business Type",
+        width: '100%',
+        dropdownParent: $('#editModelModal'),
+        allowClear: true,
+        dropdownAutoWidth: true,
+        closeOnSelect: true
+    });
+
+    $editBusinessSelect.on('select2:select', function(e) {
+        if (e.params.data.id === 'custom') {
+            previousEditModelName = $('#editModelName').val();
+            $editBusinessSelect.val(null).trigger('change');
+            $('#customBusinessModal').modal('show');
+            $('#customBusinessInput').val('').focus();
+        }
+    });
+
+    $('#saveCustomBusiness').click(function() {
+        const customValue = $('#customBusinessInput').val().trim();
+        if (customValue) {
+            const newOption = new Option(customValue, customValue, true, true);
+
+            if ($('#addModelModal').hasClass('show')) {
+                $businessSelect.find('option[value="custom"]').before(newOption);
+                $businessSelect.append(newOption).trigger('change');
+                $businessSelect.val(customValue).trigger('change');
+            }
+
+            if ($('#editModelModal').hasClass('show')) {
+                $editBusinessSelect.find('option[value="custom"]').before(newOption);
+                $editBusinessSelect.append(newOption).trigger('change');
+                $editBusinessSelect.val(customValue).trigger('change');
+                $('#editModelName').val(previousEditModelName);
+            }
+
+            $('#customBusinessModal').modal('hide');
+        } else {
+            $('#customBusinessInput').addClass('is-invalid');
+        }
+    });
+
+    $('#customBusinessInput').on('input', function() {
+        $(this).removeClass('is-invalid');
+    });
+});
+
+// DELETE
+function deleteModel(botId) {
+    const url = `/chatbot/${botId}`;
+    document.getElementById('deleteForm').setAttribute('action', url);
+    const modal = new bootstrap.Modal(document.getElementById('confirmModal'));
+    modal.show();
+}
+
+// EDIT
+function editModel(botId) {
+    fetch(`/chatbot/${botId}/edit`)
+        .then(res => res.json())
+        .then(data => {
+            // Set values
+            document.getElementById('editModelName').value = data.name;
+            document.getElementById('editBotId').value = botId;
+
+            const profileImg = data.chatbot_photo ?? "{{ asset('assets/images/favicon.png') }}";
+            document.getElementById('editProfileImage').src = profileImg;
+
+            // Handle select2 pre-fill
+            const $editBusinessSelect = $('#editBusinessTypeSelect');
+            if ($editBusinessSelect.find(`option[value="${data.type}"]`).length === 0 && data.type) {
+                const newOption = new Option(data.type, data.type, true, true);
+                $editBusinessSelect.append(newOption).trigger('change');
+            } else {
+                $editBusinessSelect.val(data.type).trigger('change');
+            }
+
+            // Set form action
+            const form = document.getElementById('editModelForm');
+            form.action = `/chatbot/${botId}`;
+
+            // Show modal
+            const modal = new bootstrap.Modal(document.getElementById('editModelModal'));
+            modal.show();
+        })
+        .catch(error => {
+            console.error('Failed to fetch bot data:', error);
+            alert("Failed to load chatbot data.");
+        });
+}
 </script>
 @if(session('success'))
 <script>

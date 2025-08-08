@@ -19,7 +19,9 @@ return new class extends Migration
             $table->string('name');
             $table->string('type');
             $table->string('chatbot_photo')->nullable();
+            $table->string('chatbot_photo_public_id')->nullable();
             $table->string('source_file')->nullable();
+            $table->string('source_file_public_id')->nullable();
             $table->longText('extracted_text')->nullable();
             $table->timestamps();
         });

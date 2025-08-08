@@ -9,6 +9,7 @@ use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\Auth\GoogleController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ChatbotController;
+use App\Http\Controllers\ChatbotApiController;
 
 // Auth::routes(['verify' => true]);
 
@@ -42,7 +43,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::get('/chatbot', [ChatbotController::class, 'index'])->name('chatbot');
     Route::post('/chatbots', [ChatbotController::class, 'store'])->name('chatbot.store');
+    Route::delete('/chatbot/{id}', [ChatbotController::class, 'destroy'])->name('chatbot.destroy');
+    Route::get('/chatbot/{id}/edit', [ChatbotController::class, 'edit'])->name('chatbot.edit');
+    Route::put('/chatbot/{id}', [ChatbotController::class, 'update'])->name('chatbot.update');
+    Route::get('/chatbot/{id}/configure', [ChatbotController::class, 'configure'])->name('chatbot.configure');
+    Route::post('/chatbot/{id}/generate-token', [ChatbotApiController::class, 'generateToken'])->name('chatbot.generateToken');
+    // Route::get('/chatbot/customize', [ChatbotController::class, 'customize']);
 });
+Route::post('/chatbot/customize', [ChatbotController::class, 'saveBot'])->name('chatbot.customize');
 
 
 // log in route start from here

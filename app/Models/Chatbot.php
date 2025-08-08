@@ -8,11 +8,22 @@ use Illuminate\Database\Eloquent\Model;
 class Chatbot extends Model
 {
     protected $fillable = [
-        'user_id', 'name', 'type', 'chatbot_photo', 'source_file', 'extracted_text',
+        'user_id',
+        'name',
+        'type',
+        'chatbot_photo',
+        'chatbot_photo_public_id',
+        'source_file',
+        'source_file_public_id',
+        'extracted_text',
     ];
 
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+    public function api()
+    {
+        return $this->hasOne(ChatbotApi::class);
     }
 }

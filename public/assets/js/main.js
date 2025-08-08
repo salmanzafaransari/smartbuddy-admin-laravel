@@ -27,8 +27,6 @@
             
             // Add loading state management
             removeLoadingStates();
-            
-            console.log('AIKIT Dashboard initialized successfully');
         }
 
         /**
@@ -786,6 +784,17 @@
                 const reader = new FileReader();
                 reader.onload = function(e) {
                     $('#profileImage').attr('src', e.target.result);
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        $('#editImageUpload').on('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    $('#editProfileImage').attr('src', e.target.result);
                 };
                 reader.readAsDataURL(file);
             }
