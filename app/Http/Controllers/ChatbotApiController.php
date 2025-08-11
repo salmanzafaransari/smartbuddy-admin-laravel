@@ -7,17 +7,19 @@ use Illuminate\Support\Str;
 use App\Services\GeminiService;
 use App\Models\Chatbot;
 use App\Models\ChatbotApi;
+use App\Models\ChatbotLog;
 
 class ChatbotApiController extends Controller
 {
-   public function ask(Request $request, GeminiService $gemini)
+    public function ask(Request $request, GeminiService $gemini)
     {
+        $startTime = microtime(true);
+
         // Get token from Authorization header
         $authHeader = $request->header('Authorization');
 
-        // If using "Bearer <token>"
         if (str_starts_with($authHeader, 'Bearer ')) {
-            $access_token = substr($authHeader, 7); // remove "Bearer "
+            $access_token = substr($authHeader, 7);
         } else {
             abort(401, 'Invalid authorization header.');
         }
@@ -34,9 +36,19 @@ class ChatbotApiController extends Controller
 
         $answer = $gemini->ask($prompt);
 
+        $responseTime = round((microtime(true) - $startTime) * 1000); // ms
+
+        // Insert log
+        ChatbotLog::create([
+            'chatbot_id'    => $api->chatbot_id, // from $api, not $request
+            'user_id'       => $api->chatbot->user_id,
+            'response_time' => $responseTime
+        ]);
+
         return response()->json([
             'question' => $question,
             'answer' => $answer,
+            'response_time' => $responseTime
         ]);
     }
 
@@ -67,7 +79,14 @@ class ChatbotApiController extends Controller
         $api = ChatbotApi::create([
             'chatbot_id' => $chatbot->id,
             'access_token' => $token,
-            'prompt_template' => "Your name is ".$chatbot->name . ", a smart AI Asistent. you need to answers from " .$chatbot->type. " type question only from document below. and never let user know that you are answring from the document.",
+            'prompt_template' => "You are {$chatbot->name}, a smart AI assistant for a '{$chatbot->type}' business. 
+                                You already know all relevant details about this business as part of your own expertise. 
+                                Never mention, hint at, or imply that your knowledge comes from any external source, document, file, or text. 
+                                Always answer confidently as if the knowledge is your own. 
+                                Only answer questions that are relevant to '{$chatbot->type}'. 
+                                If the question is off-topic, politely say you can only answer '{$chatbot->type}' related questions. 
+                                If a user gives a compliment, respond with appreciation in a warm and friendly tone.",
+
             'provider' => 'gemini',
         ]);
 

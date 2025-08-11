@@ -1,7 +1,9 @@
 @extends('default')
 @section('pageTitle', $chatbot->name . ' Configure')
 @section('pageAction')
-
+<a href="/chatbot" class="btn btn-outline-secondary">
+    <i class="fas fa-arrow-left"></i> Back to Chatbots
+</a>
 @endsection
 @section('style')
 <style>
@@ -16,7 +18,29 @@
     opacity: 1;
     transition: opacity 0.5s ease;
 }
-
+.text-italic{
+ font-style:italic;
+}
+.custom-active .active {
+    background: linear-gradient(135deg, rgb(var(--primary)) 0%, rgb(var(--primary-dark)) 100%);
+    color: #fff !important;
+}
+.prev{
+    font-size:12px;
+}
+.prev .col-md-4, .prev .col-md-6{
+    margin-top:0px;
+}
+.prev .form-group{
+    padding:0px;
+}
+.prev .form-control{
+font-size:12px;
+padding: 5px 10px;
+}
+.prev .btn-primary{
+    font-size:14px;
+}
 </style>
 @endsection
 @section('content')
@@ -24,7 +48,7 @@
 <div class="content">
     <div class="row g-4">
         <!-- Settings Navigation -->
-        <div class="col-lg-3">
+        <!-- <div class="col-lg-4">
             <div class="dashboard-card">
                 <div class="card-body">
                     <nav class="settings-nav">
@@ -39,157 +63,157 @@
                     </nav>
                 </div>
             </div>
-        </div>
-        
-        <!-- Settings Content -->
-        <div class="col-lg-9">
-          <!-- API Keys Settings -->
-          <div class="settings-tab active" id="api">
+        </div> -->
+        <div class="col-lg-12">
               <div class="dashboard-card">
-                  <div class="card-header d-flex justify-content-between align-items-center">
-                      <h5 class="card-title">API Key</h5>
-                      @if(empty($chatbot->api) || empty($chatbot->api->access_token))
-                          <button id="generate-btn-{{ $chatbot->id }}" class="btn btn-sm btn-primary" onclick="generateToken({{ $chatbot->id }}, this)">
-                              <i class="fas fa-plus"></i> <span class="btn-text">Generate New Key</span>
+                  <nav>
+                      <div class="nav nav-tabs custom-active" id="nav-tab" role="tablist">
+                          <button class="nav-link w-50 active p-3" id="nav-token-tab" data-bs-toggle="tab" data-bs-target="#nav-token" type="button" role="tab" aria-controls="nav-token" aria-selected="true">
+                            <i class="fas fa-key"></i>
+                            <span><b>Access Token</b></span>
                           </button>
-                      @endif
-                  </div>
-                  <div class="card-body">
-                      <div class="api-key-list" id="api-key-list-{{ $chatbot->id }}">
-                          @if($chatbot->api && $chatbot->api->access_token)
-                              <div class="api-key-item">
-                                  <div class="api-key-info">
-                                      <strong>Access Token</strong>
-                                      <small class="text-muted d-block">Created on {{ \Carbon\Carbon::parse($chatbot->created_at)->format('M d, Y') }}</small>
-                                      <code id="token-box-{{ $chatbot->id }}" class="api-key-value">{{ $chatbot->api->access_token }}</code>
-                                  </div>
-                                  <div class="api-key-actions">
-                                      <button class="btn btn-sm btn-outline-secondary copy-token-btn" data-id="{{ $chatbot->id }}">Copy</button>
-                                      <button class="btn btn-sm btn-outline-success" onclick="generateToken({{ $chatbot->id }}, this)">Re-generate</button>
-                                  </div>
-                              </div>
-                          @endif
+                          <button class="nav-link w-50 p-3" id="nav-prefence-tab" data-bs-toggle="tab" data-bs-target="#nav-prefence" type="button" role="tab" aria-controls="nav-prefence" aria-selected="false">
+                            <i class="fas fa-image"></i>
+                            <span><b>Preferences</b></span>
+                          </button>
                       </div>
+                  </nav>
+                  <div class="tab-content" id="nav-tabContent">
+                    <div class="tab-pane fade show active" id="nav-token" role="tabpanel" aria-labelledby="nav-token-tab">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h5 class="card-title">API Key</h5>
+                            @if(empty($chatbot->api) || empty($chatbot->api->access_token))
+                                <button id="generate-btn-{{ $chatbot->id }}" class="btn btn-sm btn-primary" onclick="generateToken({{ $chatbot->id }}, this)">
+                                    <i class="fas fa-plus"></i> <span class="btn-text">Generate New Key</span>
+                                </button>
+                            @endif
+                        </div>
+                        <div class="card-body">
+                            <div class="api-key-list" id="api-key-list-{{ $chatbot->id }}">
+                                @if($chatbot->api && $chatbot->api->access_token)
+                                    <div class="api-key-item">
+                                        <div class="api-key-info">
+                                            <strong>Access Token</strong>
+                                            <small class="text-muted d-block">Created on {{ \Carbon\Carbon::parse($chatbot->created_at)->format('M d, Y') }}</small>
+                                            <code id="token-box-{{ $chatbot->id }}" class="api-key-value">{{ $chatbot->api->access_token }}</code>
+                                        </div>
+                                        <div class="api-key-actions">
+                                            <button class="btn btn-sm btn-outline-secondary copy-token-btn" data-id="{{ $chatbot->id }}">Copy</button>
+                                            <button class="btn btn-sm btn-outline-success" onclick="generateToken({{ $chatbot->id }}, this)">Regenerate</button>
+                                        </div>
+                                    </div>
+                                @endif
+                            </div>
 
-                      <div class="alert alert-info mt-4">
-                          <i class="fas fa-info-circle"></i>
-                          <strong>Important:</strong> Keep your API keys secure and never share them publicly.
-                      </div>
+                            <div class="alert alert-info mt-4">
+                                <i class="fas fa-info-circle"></i>
+                                <strong>Important:</strong> Keep your API keys secure and never share them publicly,
+                            </div>
+                            @if($chatbot->api && $chatbot->api->access_token)
+                                <div class="alert alert-danger">
+                                    <i class="fas fa-book"></i>
+                                    <i><strong>Note:</strong> If you regenerate your access token, your bot will not be able to answer any queries until you replace the CSS and JS files.</i>
+                                </div>
+                            @endif
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="nav-prefence" role="tabpanel" aria-labelledby="nav-prefence-tab">
+                        <div class="card-header">
+                            <h5 class="card-title text-center">Customize & Preview</h5>
+                        </div>
+                        <div class="card-body prev">
+                            <div class="row g2">
+                                <div class="col-md-6"></div>
+                                <div class="col-md-6">
+                                    <!-- resources/views/chatbot/customize.blade.php -->
+                                    @if(empty($chatbot->api) || empty($chatbot->api->access_token))
+                                        <div class="alert alert-warning mt-4">
+                                            <i class="fas fa-info-circle"></i>
+                                            To set up your chatbot prefence you need to generate a token first.
+                                        </div>
+                                    @else
+                                    <form action="{{ route('chatbot.customize') }}" method="POST">
+                                        @csrf
+        
+                                        <input type="hidden" name="chatbot_id" value="{{ $chatbot->id }}">
+                                        
+                                        <div class="row">
+                                        <div class="col-md-12">
+                                            <!-- Preset Themes -->
+                                            <div class="form-group">
+                                            <label>Preset Theme</label>
+                                            <select id="preset-theme" class="form-control">
+                                            <option value="">-- Select a Theme --</option>
+                                            </select>
+                                            </div>
+                                        </div>
+                                        <input type="hidden" name="user_text_color" id="user_text_color" value="{{ $chatbot->preference->user_text_color ?? '#000000' }}">
+                                        <input type="hidden" name="bot_text_color" id="bot_text_color"  value="{{ $chatbot->preference->bot_text_color ?? '#000000' }}">
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <input type="color" name="primary_color" id="primary_color" value="{{ $chatbot->preference->primary_color ?? '#0673f1' }}" required><br/>
+                                                <label>Primary Color</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <input type="color" name="user_bubble" id="user_bubble" value="{{ $chatbot->preference->user_bubble ?? '#DCF8C6' }}" required><br/>
+                                                <label>User Message Color</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <input type="color" name="bot_bubble" id="bot_bubble" value="{{ $chatbot->preference->bot_bubble ?? '#F1F0F0' }}" required><br/>
+                                                <label>Bot Message Color</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label>Position X (Horizontal)</label>
+                                                <select name="position_x" id="position_x" class="form-control" required>
+                                                    <option value="left" {{ isset($chatbot->preference) && $chatbot->preference->position_x === 'left' ? 'selected' : '' }}>Left</option>
+                                                    <option value="right" {{ isset($chatbot->preference) && $chatbot->preference->position_x === 'right' ? 'selected' : '' }}>Right</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label>Position Y (Vertical)</label>
+                                                <select name="position_y" id="position_y" class="form-control" required>
+                                                    <option value="bottom" {{ isset($chatbot->preference) && $chatbot->preference->position_y === 'bottom' ? 'selected' : '' }}>Bottom</option>
+                                                    <option value="top" {{ isset($chatbot->preference) && $chatbot->preference->position_y === 'top' ? 'selected' : '' }}>Top</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label>Offset X (px)</label>
+                                                <input type="number" name="offset_x" id="offset_x" value="{{ $chatbot->preference->offset_x ?? '20' }}" class="form-control" required>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label>Offset Y (px)</label>
+                                                <input type="number" name="offset_y" id="offset_y" value="{{ $chatbot->preference->offset_y ?? '20' }}" class="form-control" required>
+                                            </div>
+                                        </div>
+                                        </div>
+                                        <div class="d-flex w-100 justify-content-end">
+                                            <button type="submit" class="btn btn-primary mt-2">Generate & Download</button>
+                                        </div>
+                                    </form>
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                   </div>
               </div>
-          </div>
-          <!-- Notifications Settings -->
-          <div class="settings-tab" id="notifications">
-              <div class="dashboard-card">
-                  <div class="card-header">
-                      <h5 class="card-title">Preferences</h5>
-                  </div>
-                  <div class="card-body">
-                      <!-- <div class="notification-section">
-                          <h6>Email Notifications</h6>
-                          <div class="form-check">
-                              <input class="form-check-input" type="checkbox" id="emailNews" checked>
-                              <label class="form-check-label" for="emailNews">
-                                  Newsletter and updates
-                              </label>
-                          </div>
-                          <div class="form-check">
-                              <input class="form-check-input" type="checkbox" id="emailSecurity" checked>
-                              <label class="form-check-label" for="emailSecurity">
-                                  Security alerts
-                              </label>
-                          </div>
-                          <div class="form-check">
-                              <input class="form-check-input" type="checkbox" id="emailBilling">
-                              <label class="form-check-label" for="emailBilling">
-                                  Billing notifications
-                              </label>
-                          </div>
-                      </div>
-                      
-                      <div class="notification-section mt-4">
-                          <h6>Push Notifications</h6>
-                          <div class="form-check">
-                              <input class="form-check-input" type="checkbox" id="pushTasks" checked>
-                              <label class="form-check-label" for="pushTasks">
-                                  AI task completions
-                              </label>
-                          </div>
-                          <div class="form-check">
-                              <input class="form-check-input" type="checkbox" id="pushErrors">
-                              <label class="form-check-label" for="pushErrors">
-                                  Error notifications
-                              </label>
-                          </div>
-                          <div class="form-check">
-                              <input class="form-check-input" type="checkbox" id="pushUsage">
-                              <label class="form-check-label" for="pushUsage">
-                                  Usage limit warnings
-                              </label>
-                          </div>
-                      </div>
-                      
-                      <div class="mt-4">
-                          <button type="submit" class="btn btn-primary">Save Preferences</button>
-                      </div> -->
-                      <!-- resources/views/chatbot/customize.blade.php -->
-                       <form action="{{ route('chatbot.customize') }}" method="POST">
-                         @csrf
-
-                         <!-- Hidden field for chatbot ID -->
-                         <input type="hidden" name="chatbot_id" value="{{ $chatbot->id }}">
-
-                         <div class="form-group">
-                             <label>Primary Color</label>
-                             <input type="color" name="primary_color" value="#0673f1" required>
-                         </div>
-
-                         <div class="form-group">
-                             <label>User Message Bubble Color</label>
-                             <input type="color" name="user_bubble" value="#DCF8C6" required>
-                         </div>
-
-                         <div class="form-group">
-                             <label>Bot Message Bubble Color</label>
-                             <input type="color" name="bot_bubble" value="#F1F0F0" required>
-                         </div>
-
-                         <div class="form-group">
-                             <label>Position X (Horizontal)</label>
-                             <select name="position_x" class="form-control" required>
-                                 <option value="left">Left</option>
-                                 <option value="right" selected>Right</option>
-                             </select>
-                         </div>
-
-                         <div class="form-group">
-                             <label>Position Y (Vertical)</label>
-                             <select name="position_y" class="form-control" required>
-                                 <option value="bottom" selected>Bottom</option>
-                                 <option value="top">Top</option>
-                             </select>
-                         </div>
-
-                         <div class="form-group">
-                             <label>Offset X (px)</label>
-                             <input type="number" name="offset_x" value="20" class="form-control" required>
-                         </div>
-
-                         <div class="form-group">
-                             <label>Offset Y (px)</label>
-                             <input type="number" name="offset_y" value="20" class="form-control" required>
-                         </div>
-
-                         <button type="submit" class="btn btn-primary mt-3">Generate & Download</button>
-
-                       </form>
-
-                  </div>
-              </div>
-          </div>
         </div>
+
     </div>
 </div>
+
 @endsection
 @section('scripts')
 <script>
@@ -240,11 +264,12 @@ function generateToken(chatbotId, btn) {
        complete: function () {
            $btn.prop('disabled', false);
            $text.html('Generate New Key');
+           window.location.reload();
        }
    });
 }
 
-// ✅ Toast Notification
+// Toast Notification
 function showToast(message, type = 'success') {
    const icon = {
        success: 'check-circle',
@@ -270,8 +295,9 @@ function showToast(message, type = 'success') {
    }, 4000);
 }
 
-// 📋 Copy to clipboard
+// Copy to clipboard
 $(document).on('click', '.copy-token-btn', function () {
+   $(this).text('Copied');
    const chatbotId = $(this).data('id');
    const tokenText = $(`#token-box-${chatbotId}`).text().trim();
 
@@ -284,4 +310,62 @@ $(document).on('click', '.copy-token-btn', function () {
    showToast('Copied to clipboard', 'info');
 });
 </script>
+<script>
+    const themes = {
+        classic: { primary_color: '#0673f1', user_bubble: '#90c1f9', bot_bubble: '#F1F0F0', position_x: 'right', position_y: 'bottom', offset_x: 20, offset_y: 20 },
+        light: { primary_color: '#FFFFFF', user_bubble: '#F0F0F0', bot_bubble: '#E6E6E6', position_x: 'left', position_y: 'bottom', offset_x: 15, offset_y: 15 },
+        whatsapp: { primary_color: '#25D366', user_bubble: '#DCF8C6', bot_bubble: '#FFFFFF', position_x: 'right', position_y: 'bottom', offset_x: 20, offset_y: 20 },
+        midnight_aurora: { primary_color: '#6A00F4', user_bubble: '#2D00AA', bot_bubble: '#0A0A2A', position_x: 'right', position_y: 'bottom', offset_x: 20, offset_y: 20 },
+        coral_bliss: { primary_color: '#FF6B6B', user_bubble: '#FFE3E3', bot_bubble: '#FFF5F5', position_x: 'left', position_y: 'top', offset_x: 25, offset_y: 25 },
+        cyber_neon: { primary_color: '#00F5D0', user_bubble: '#003844', bot_bubble: '#001C24', position_x: 'right', position_y: 'bottom', offset_x: 30, offset_y: 30 },
+        sunset_gradient: { primary_color: '#FF7D00', user_bubble: '#FFBB00', bot_bubble: '#FFEECC', position_x: 'right', position_y: 'bottom', offset_x: 15, offset_y: 15 },
+        forest_whisper: { primary_color: '#2E8B57', user_bubble: '#D8E2DC', bot_bubble: '#F8F9FA', position_x: 'left', position_y: 'bottom', offset_x: 18, offset_y: 18 },
+        royal_velvet: { primary_color: '#5E35B1', user_bubble: '#E1D5F6', bot_bubble: '#F3EFFF', position_x: 'right', position_y: 'top', offset_x: 22, offset_y: 22 },
+        ocean_depth: { primary_color: '#0077B6', user_bubble: '#CAE9FF', bot_bubble: '#E6F2FF', position_x: 'right', position_y: 'bottom', offset_x: 20, offset_y: 20 },
+        mars_horizon: { primary_color: '#E2711D', user_bubble: '#FFB347', bot_bubble: '#412722', position_x: 'left', position_y: 'bottom', offset_x: 25, offset_y: 25 },
+        cyberpunk: { primary_color: '#FF2A6D', user_bubble: '#05D9E8', bot_bubble: '#0C0032', position_x: 'right', position_y: 'bottom', offset_x: 30, offset_y: 30 }
+    };
+
+    const themeSelect = document.getElementById('preset-theme');
+
+    // Populate select options dynamically
+    Object.keys(themes).forEach(key => {
+        const opt = document.createElement('option');
+        opt.value = key;
+        opt.textContent = key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+        themeSelect.appendChild(opt);
+    });
+
+    function getContrastYIQ(hexcolor) {
+        hexcolor = hexcolor.replace('#', '');
+        const r = parseInt(hexcolor.substr(0, 2), 16);
+        const g = parseInt(hexcolor.substr(2, 2), 16);
+        const b = parseInt(hexcolor.substr(4, 2), 16);
+        const yiq = ((r * 299) + (g * 587) + (b * 114)) / 1000;
+        return (yiq >= 128) ? '#000000' : '#FFFFFF';
+    }
+
+    themeSelect.addEventListener('change', function () {
+        const selected = themes[this.value];
+        if (selected) {
+            // Fill in normal values
+            document.getElementById('primary_color').value = selected.primary_color;
+            document.getElementById('user_bubble').value = selected.user_bubble;
+            document.getElementById('bot_bubble').value = selected.bot_bubble;
+            document.getElementById('position_x').value = selected.position_x;
+            document.getElementById('position_y').value = selected.position_y;
+            document.getElementById('offset_x').value = selected.offset_x;
+            document.getElementById('offset_y').value = selected.offset_y;
+
+            // Auto contrast text colors
+            const userTextColor = getContrastYIQ(selected.user_bubble);
+            const botTextColor  = getContrastYIQ(selected.bot_bubble);
+
+            // Hidden inputs for form submission
+            document.getElementById('user_text_color').value = userTextColor;
+            document.getElementById('bot_text_color').value = botTextColor;
+        }
+    });
+</script>
+
 @endsection

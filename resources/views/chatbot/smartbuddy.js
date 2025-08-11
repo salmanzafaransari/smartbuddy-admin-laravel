@@ -3,10 +3,12 @@ document.addEventListener("DOMContentLoaded", function () {
     const ACCESS_TOKEN = "{{ACCESS_TOKEN}}";
     const BOT_NAME = "{{BOT_NAME}}";
     const BOT_IMAGE = "{{BOT_IMAGE}}";
+    const STORAGE_KEY = "{{CHAT_HISTORY}}";
+    const trashimage = "https://res.cloudinary.com/dxzoie0ab/image/upload/v1754735371/chatbot_images/trash_c1zmjn.png";
 
     const chatBtn = document.createElement('button');
     chatBtn.id = 'chat-popup-btn';
-    chatBtn.innerHTML = `<img src=${BOT_IMAGE} width="30">`;
+    chatBtn.innerHTML = `<img src=${BOT_IMAGE} width="50" style="border-radius:50% !important;">`;
     document.body.appendChild(chatBtn);
 
     const chatWindow = document.createElement('div');
@@ -20,6 +22,7 @@ document.addEventListener("DOMContentLoaded", function () {
       <div class="chat-input">
         <input type="text" id="chat-input-field" placeholder="Ask something..." />
         <button id="chat-send-btn">Send</button>
+        <button id="clear-chat-btn" title="Clear Chat"><img src=${trashimage} width="15" /></button>
       </div>
     `;
     document.body.appendChild(chatWindow);
@@ -43,7 +46,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
     sendBtn.addEventListener('click', sendMessage);
 
-    // Send message when pressing Enter
     inputField.addEventListener('keypress', function (e) {
       if (e.key === 'Enter' && !e.shiftKey) {
         e.preventDefault();
@@ -51,16 +53,21 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     });
 
-    async function sendMessage() {
+    // Load chat history
+    loadChatHistory();
+    document.getElementById("clear-chat-btn").addEventListener("click", function () {
+      localStorage.removeItem(STORAGE_KEY);
+      document.getElementById("chat-body").innerHTML = "";
+    });
 
+    async function sendMessage() {
       const API_BASE = "http://localhost:8000";
       const msg = inputField.value.trim();
       if (!msg) return;
 
-      appendMessage('user', msg);
+      appendMessage('user', msg, true); // true = save to storage
       inputField.value = '';
 
-      // Show typing indicator
       const typingId = appendTypingIndicator();
 
       try {
@@ -73,15 +80,13 @@ document.addEventListener("DOMContentLoaded", function () {
           body: JSON.stringify({ question: msg })
         });
         const data = await res.json();
-
-        // Replace typing indicator with actual answer
-        updateMessageText(typingId, data.answer || "No response");
+        updateMessageText(typingId, data.answer || "No response", true);
       } catch (err) {
-        updateMessageText(typingId, "Error contacting server");
+        updateMessageText(typingId, "Error contacting server", true);
       }
     }
 
-    function appendMessage(sender, text) {
+    function appendMessage(sender, text, save = false) {
       const chatBody = document.getElementById('chat-body');
       if (!chatBody) return;
       const msgEl = document.createElement('div');
@@ -89,6 +94,11 @@ document.addEventListener("DOMContentLoaded", function () {
       msgEl.innerText = text;
       chatBody.appendChild(msgEl);
       chatBody.scrollTop = chatBody.scrollHeight;
+
+      if (save) {
+        saveMessage(sender, text);
+      }
+
       return msgEl;
     }
 
@@ -102,11 +112,29 @@ document.addEventListener("DOMContentLoaded", function () {
       return typingEl;
     }
 
-    function updateMessageText(msgEl, newText) {
+    function updateMessageText(msgEl, newText, save = false) {
       if (msgEl) {
         msgEl.classList.remove('typing-indicator');
         msgEl.innerHTML = newText;
+
+        if (save) {
+          saveMessage('bot', newText);
+        }
       }
+    }
+
+    // LocalStorage handling
+    function saveMessage(sender, text) {
+      let history = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+      history.push({ sender, text });
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(history));
+    }
+
+    function loadChatHistory() {
+      const history = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+      history.forEach(msg => {
+        appendMessage(msg.sender, msg.text);
+      });
     }
 
     // Inject styles for typing dots

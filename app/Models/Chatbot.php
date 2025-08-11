@@ -26,4 +26,12 @@ class Chatbot extends Model
     {
         return $this->hasOne(ChatbotApi::class);
     }
+    public function logs()
+    {
+        return $this->hasMany(ChatbotLog::class);
+    }
+    public function preference()
+    {
+        return $this->hasOne(ChatbotPreference::class);
+    }
 }

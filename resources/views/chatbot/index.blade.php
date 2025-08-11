@@ -20,6 +20,7 @@
   border-radius:50%;
   overflow:hidden;
   margin-top:-65px;
+  background-color:#fff;
  }
  .img-box img{
   width: 100%;
@@ -125,11 +126,15 @@
                                 <div class="model-stats">
                                     <div class="stat-item">
                                         <span class="stat-label">Usage</span>
-                                        <span class="stat-value">--</span> <!-- Optional: dynamic usage stats -->
+                                        <span class="stat-value">{{ $bot->logs_count ?? 0 }}</span> <!-- Optional: dynamic usage stats -->
                                     </div>
                                     <div class="stat-item">
                                         <span class="stat-label">Response Time</span>
-                                        <span class="stat-value">--</span> <!-- Optional: response stats -->
+                                        <span class="stat-value">
+                                             {{ $bot->logs_avg_response_time 
+                                                ? round($bot->logs_avg_response_time) . ' ms' 
+                                                : '--' }}
+                                        </span> <!-- Optional: response stats -->
                                     </div>
                                 </div>
                             </div>

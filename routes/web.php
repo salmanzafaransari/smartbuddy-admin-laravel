@@ -40,6 +40,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'profile'])->name('profile');
     Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('editProfile');
     Route::post('/profile/edit', [ProfileController::class, 'update'])->name('profile.update');
+    Route::get('/profile/setting', [ProfileController::class, 'setting'])->name('setting');
+
+    Route::post('/account/send-delete-code', [ProfileController::class, 'sendDeleteCode'])->name('account.sendDeleteCode');
+    Route::post('/account/delete', [ProfileController::class, 'deleteAccount'])->name('account.delete');
 
     Route::get('/chatbot', [ChatbotController::class, 'index'])->name('chatbot');
     Route::post('/chatbots', [ChatbotController::class, 'store'])->name('chatbot.store');
@@ -49,8 +53,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/chatbot/{id}/configure', [ChatbotController::class, 'configure'])->name('chatbot.configure');
     Route::post('/chatbot/{id}/generate-token', [ChatbotApiController::class, 'generateToken'])->name('chatbot.generateToken');
     // Route::get('/chatbot/customize', [ChatbotController::class, 'customize']);
+    Route::post('/chatbot/customize', [ChatbotController::class, 'saveBot'])->name('chatbot.customize');
+    // Route::get('/chatbot/{id}/check-token',[ChatbotController::class, 'checkToken']);
+    
 });
-Route::post('/chatbot/customize', [ChatbotController::class, 'saveBot'])->name('chatbot.customize');
 
 
 // log in route start from here

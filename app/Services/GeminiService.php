@@ -36,7 +36,7 @@ class GeminiService
         ]);
 
         if (!$response->successful()) {
-            return 'Gemini API Error: ' . $response->status();
+            return 'Something Went Wrong: ' . $response->status();
         }
 
         $json = $response->json();

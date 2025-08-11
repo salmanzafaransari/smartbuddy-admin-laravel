@@ -11,12 +11,18 @@ use Smalot\PdfParser\Parser as PdfParser;
 use Illuminate\Support\Str;
 use Cloudinary\Api\Upload\UploadApi;
 use App\Models\ChatbotApi;
+use App\Models\ChatbotPreference;
+use MatthiasMullie\Minify;
 
 class chatbotController extends Controller
 {
     public function index()
     {
-        $chatbots = Chatbot::where('user_id', Auth::id())->latest()->get();
+        $chatbots = Chatbot::where('user_id', Auth::id())
+        ->withCount('logs') // usage count
+        ->withAvg('logs', 'response_time') // avg response time
+        ->latest()
+        ->get();
         return view('chatbot.index', compact('chatbots'));
     }
 
@@ -129,7 +135,7 @@ class chatbotController extends Controller
 
     public function configure($id)
     {
-        $chatbot = Chatbot::with('api')->findOrFail($id);
+        $chatbot = Chatbot::with('api', 'preference')->findOrFail($id);
         return view('chatbot.configure', compact('chatbot'));
     }
 
@@ -137,18 +143,23 @@ class chatbotController extends Controller
    public function saveBot(Request $request)
     {
         $validated = $request->validate([
-            'chatbot_id'    => 'required|integer',
-            'primary_color' => 'required',
-            'user_bubble'   => 'required',
-            'bot_bubble'    => 'required',
-            'position_x'    => 'required|in:left,right',
-            'position_y'    => 'required|in:top,bottom',
-            'offset_x'      => 'required|numeric',
-            'offset_y'      => 'required|numeric',
+            'chatbot_id'      => 'required|integer',
+            'primary_color'   => 'required',
+            'user_bubble'     => 'required',
+            'bot_bubble'      => 'required',
+            'user_text_color' => 'required',
+            'bot_text_color'  => 'required',
+            'position_x'      => 'required|in:left,right',
+            'position_y'      => 'required|in:top,bottom',
+            'offset_x'        => 'required|numeric',
+            'offset_y'        => 'required|numeric',
         ]);
-
+        // Save or update preference
+        ChatbotPreference::updateOrCreate(
+            ['chatbot_id' => $validated['chatbot_id']],
+            $validated
+        );
         // Fetch chatbot details from DB
-        $chatbotId = $request->chatbot_id;
         $chatbot = Chatbot::select('id', 'name', 'chatbot_photo')
             ->with(['api' => function ($query) {
                 $query->select('chatbot_id', 'access_token');
@@ -160,33 +171,46 @@ class chatbotController extends Controller
         $avatarUrl   = $chatbot->chatbot_photo;
 
         // Replace placeholders in CSS
-        $cssTemplate = file_get_contents(resource_path('views/chatbot/chat-widget.css'));
+        $chatHistory = md5($validated['chatbot_id'] . '|' . $accessToken);
+
+        
+        $cssTemplate = file_get_contents(resource_path('views/chatbot/smartbuddy.css'));
         $css = str_replace(
-            ['{{CHAT_POSITION_X}}', '{{CHAT_POSITION_Y}}', '{{CHAT_OFFSET_X}}', '{{CHAT_OFFSET_Y}}', '{{PRIMARY_COLOR}}', '{{USER_BUBBLE}}', '{{BOT_BUBBLE}}', '{{AVATAR_URL}}'],
-            [$validated['position_x'], $validated['position_y'], $validated['offset_x'], $validated['offset_y'], $validated['primary_color'], $validated['user_bubble'], $validated['bot_bubble'], $avatarUrl],
+            ['{{CHAT_POSITION_X}}', '{{CHAT_POSITION_Y}}', '{{CHAT_OFFSET_X}}', '{{CHAT_OFFSET_Y}}', '{{PRIMARY_COLOR}}', '{{USER_BUBBLE}}', '{{BOT_BUBBLE}}', '{{AVATAR_URL}}', '{{USER_TEXT_COLOR}}', '{{BOT_TEXT_COLOR}}'],
+            [$validated['position_x'], $validated['position_y'], $validated['offset_x'], $validated['offset_y'], $validated['primary_color'], $validated['user_bubble'], $validated['bot_bubble'], $avatarUrl, $validated['user_text_color'], $validated['bot_text_color']],
             $cssTemplate
         );
 
         // Replace placeholders in JS
-        $jsTemplate = file_get_contents(resource_path('views/chatbot/chat-widget.js'));
+        $jsTemplate = file_get_contents(resource_path('views/chatbot/smartbuddy.js'));
         $js = str_replace(
-            ['{{ACCESS_TOKEN}}', '{{BOT_NAME}}', '{{BOT_IMAGE}}'],
-            [$accessToken, $botName, $avatarUrl],
+            ['{{ACCESS_TOKEN}}', '{{BOT_NAME}}', '{{BOT_IMAGE}}', '{{CHAT_HISTORY}}'],
+            [$accessToken, $botName, $avatarUrl, $chatHistory],
             $jsTemplate
         );
 
         // Create ZIP for download
-        $zipPath = storage_path('app/chatbot_custom.zip');
+        // Minify CSS
+        $minifierCss = new Minify\CSS();
+        $minifierCss->add($css);
+        $cssMinified = $minifierCss->minify();
+
+        // Minify JS
+        $minifierJs = new Minify\JS();
+        $minifierJs->add($js);
+        $jsMinified = $minifierJs->minify();
+
+        // Create ZIP
+        $zipPath = storage_path('app/smartbuddyChat.zip');
         $zip = new \ZipArchive;
         if ($zip->open($zipPath, \ZipArchive::CREATE) === TRUE) {
-            $zip->addFromString('chat-widget.css', $css);
-            $zip->addFromString('chat-widget.js', $js);
+            $zip->addFromString('smartbuddy.min.css', $cssMinified);
+            $zip->addFromString('smartbuddy.min.js', $jsMinified);
             $zip->close();
         }
 
         return response()->download($zipPath)->deleteFileAfterSend(true);
     }
-
     private function extractTextFromFile($file)
     {
         $mime = $file->getMimeType();

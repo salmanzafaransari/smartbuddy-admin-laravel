@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
+use App\Mail\AccountDeletionCodeMail;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Session;
 
 class ProfileController extends Controller
 {
@@ -80,5 +83,29 @@ class ProfileController extends Controller
         return view('profile.profile', [
             'formattedLogin' => $formattedLogin,
         ]);
+    }
+    public function setting()
+    {
+        return view('profile.setting');
+    }
+    public function sendDeleteCode(Request $request){
+        $code = rand(100000, 999999);
+        session(['delete_code' => $code]);
+
+        Mail::to($request->user()->email)
+            ->send(new AccountDeletionCodeMail($code, $request->user()));
+
+        return response()->json(['success' => true]);
+    }
+    public function deleteAccount(Request $request){
+        if ($request->code != Session::get('delete_code')) {
+            return response()->json(['success' => false, 'message' => 'Invalid confirmation code.']);
+        }
+
+        $user = $request->user();
+        $user->delete();
+        Session::forget('delete_code');
+
+        return response()->json(['success' => true]);
     }
 }
