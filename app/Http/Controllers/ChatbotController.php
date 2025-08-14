@@ -143,20 +143,25 @@ class chatbotController extends Controller
    public function saveBot(Request $request)
     {
         $validated = $request->validate([
-            'chatbot_id'      => 'required|integer',
-            'primary_color'   => 'required',
-            'user_bubble'     => 'required',
-            'bot_bubble'      => 'required',
-            'user_text_color' => 'required',
-            'bot_text_color'  => 'required',
-            'position_x'      => 'required|in:left,right',
-            'position_y'      => 'required|in:top,bottom',
-            'offset_x'        => 'required|numeric',
-            'offset_y'        => 'required|numeric',
+            'chatbot_id'         => 'required|integer',
+            'user_id'         => 'required|integer',
+            'theme'              => 'required',
+            'primary_color'      => 'required',
+            'user_bubble'        => 'required',
+            'bot_bubble'         => 'required',
+            'user_text_color'    => 'required',
+            'bot_text_color'     => 'required',
+            'position_x'         => 'required|in:left,right',
+            'position_y'         => 'required|in:top,bottom',
+            'offset_x'           => 'required|numeric',
+            'offset_y'           => 'required|numeric',
+            'bubble_pattern'     => 'required',
+            'background_pattern' => 'required',
         ]);
         // Save or update preference
         ChatbotPreference::updateOrCreate(
             ['chatbot_id' => $validated['chatbot_id']],
+            ['user_id' => $validated['user_id']],
             $validated
         );
         // Fetch chatbot details from DB
@@ -169,6 +174,10 @@ class chatbotController extends Controller
         $accessToken = $chatbot->api->access_token;
         $botName     = $chatbot->name;
         $avatarUrl   = $chatbot->chatbot_photo;
+        $chatbot_id  = encrypt($validated['chatbot_id']);
+        $user_id   = encrypt($validated['user_id']);
+
+        
 
         // Replace placeholders in CSS
         $chatHistory = md5($validated['chatbot_id'] . '|' . $accessToken);
@@ -176,16 +185,28 @@ class chatbotController extends Controller
         
         $cssTemplate = file_get_contents(resource_path('views/chatbot/smartbuddy.css'));
         $css = str_replace(
-            ['{{CHAT_POSITION_X}}', '{{CHAT_POSITION_Y}}', '{{CHAT_OFFSET_X}}', '{{CHAT_OFFSET_Y}}', '{{PRIMARY_COLOR}}', '{{USER_BUBBLE}}', '{{BOT_BUBBLE}}', '{{AVATAR_URL}}', '{{USER_TEXT_COLOR}}', '{{BOT_TEXT_COLOR}}'],
-            [$validated['position_x'], $validated['position_y'], $validated['offset_x'], $validated['offset_y'], $validated['primary_color'], $validated['user_bubble'], $validated['bot_bubble'], $avatarUrl, $validated['user_text_color'], $validated['bot_text_color']],
+            [
+                '{{CHAT_POSITION_X}}', '{{CHAT_POSITION_Y}}', '{{CHAT_OFFSET_X}}', '{{CHAT_OFFSET_Y}}',
+                '{{PRIMARY_COLOR}}', '{{USER_BUBBLE}}', '{{BOT_BUBBLE}}', '{{AVATAR_URL}}',
+                '{{USER_TEXT_COLOR}}', '{{BOT_TEXT_COLOR}}'
+            ],
+            [
+                $validated['position_x'], $validated['position_y'], $validated['offset_x'], $validated['offset_y'],
+                $validated['primary_color'], $validated['user_bubble'], $validated['bot_bubble'], $avatarUrl,
+                $validated['user_text_color'], $validated['bot_text_color']
+            ],
             $cssTemplate
         );
+
+        // $encjs = {'chat_bot': $chatbot_id, 'user_id':$user_id};
+        
+        $encjs = ['chat_bot' => $chatbot_id, 'user_id' => $user_id];
 
         // Replace placeholders in JS
         $jsTemplate = file_get_contents(resource_path('views/chatbot/smartbuddy.js'));
         $js = str_replace(
-            ['{{ACCESS_TOKEN}}', '{{BOT_NAME}}', '{{BOT_IMAGE}}', '{{CHAT_HISTORY}}'],
-            [$accessToken, $botName, $avatarUrl, $chatHistory],
+            ['{{ACCESS_TOKEN}}', '{{BOT_NAME}}', '{{BOT_IMAGE}}', '{{CHAT_HISTORY}}', '{{BUBBLE_PATTERN}}', '{{BG_PATTERN}}', '{{JS_SERVICE}}'],
+            [$accessToken, $botName, $avatarUrl, $chatHistory,$validated['bubble_pattern'], $validated['background_pattern'],  json_encode($encjs)],
             $jsTemplate
         );
 

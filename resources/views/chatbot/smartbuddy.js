@@ -5,6 +5,36 @@ document.addEventListener("DOMContentLoaded", function () {
     const BOT_IMAGE = "{{BOT_IMAGE}}";
     const STORAGE_KEY = "{{CHAT_HISTORY}}";
     const trashimage = "https://res.cloudinary.com/dxzoie0ab/image/upload/v1754735371/chatbot_images/trash_c1zmjn.png";
+    const BUBBLE_PATTERN = '{{BUBBLE_PATTERN}}';
+    const BG_PATTERN = '{{BG_PATTERN}}';
+    const jsService = '{{JS_SERVICE}}';
+    const parsed = JSON.parse(jsService);
+    const API_BASE = "http://localhost:8000";
+
+
+
+    async function startService() {
+      try {
+        const res = await fetch(`${API_BASE}/api/chatbot/service`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(
+            {
+              user_id: parsed.user_id,
+              chatbot_id: parsed.chat_bot,
+              website: window.location.origin,
+              page: document.referrer
+            }
+          )
+        });
+        const data = await res.json();
+        console.log(data, 'success');
+        
+      } catch (err) {
+        console.log(err, 'error');
+      }
+    }
+    startService();
 
     const chatBtn = document.createElement('button');
     chatBtn.id = 'chat-popup-btn';
@@ -13,6 +43,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const chatWindow = document.createElement('div');
     chatWindow.id = 'chat-popup-window';
+    chatWindow.className = `pattern-${BUBBLE_PATTERN} bg-${BG_PATTERN}`;
     chatWindow.innerHTML = `
       <div class="chat-header">
         <img src=${BOT_IMAGE} width="30">
@@ -59,9 +90,7 @@ document.addEventListener("DOMContentLoaded", function () {
       localStorage.removeItem(STORAGE_KEY);
       document.getElementById("chat-body").innerHTML = "";
     });
-
     async function sendMessage() {
-      const API_BASE = "http://localhost:8000";
       const msg = inputField.value.trim();
       if (!msg) return;
 

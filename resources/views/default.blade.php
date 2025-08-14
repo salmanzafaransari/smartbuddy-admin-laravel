@@ -33,6 +33,32 @@
     
 
     @yield('scripts')
+    @auth
+        @if(auth()->user()->is_superuser)
+        <script>
+            $(document).ready(function() {
+                $.ajax({
+                    url: "{{ route('users.count') }}",
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function(response) {
+                        console.log(response.data);
+
+                        // Update sidebar count
+                        $('#allUserCount').text(response.data);
+                        $('.totalUsers').text(response.data);
+                    },
+                    error: function(xhr) {
+                        console.log(xhr.responseText);
+                        $('#allUserCount').text('0');
+                        $('.totalUsers').text('0');
+                    }
+                });
+                });
+
+        </script>
+        @endif
+    @endauth
 </body>
 
 </html>

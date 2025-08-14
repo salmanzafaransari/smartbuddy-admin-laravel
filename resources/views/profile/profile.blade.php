@@ -35,17 +35,13 @@
                     
                     <div class="profile-stats">
                         <div class="row text-center">
-                            <div class="col-4">
-                                <div class="stat-number">1,247</div>
+                            <div class="col-6">
+                                <div class="stat-number">{{ $totalBotCalls }}</div>
                                 <div class="stat-label">API Calls</div>
                             </div>
-                            <div class="col-4">
-                                <div class="stat-number">24</div>
-                                <div class="stat-label">Models</div>
-                            </div>
-                            <div class="col-4">
-                                <div class="stat-number">567</div>
-                                <div class="stat-label">Images</div>
+                            <div class="col-6">
+                                <div class="stat-number">{{ $totalModels }}</div>
+                                <div class="stat-label">ChatBot</div>
                             </div>
                         </div>
                     </div>

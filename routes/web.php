@@ -10,6 +10,7 @@ use App\Http\Controllers\Auth\GoogleController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ChatbotController;
 use App\Http\Controllers\ChatbotApiController;
+use App\Http\Controllers\UserController;
 
 // Auth::routes(['verify' => true]);
 
@@ -57,6 +58,16 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Route::get('/chatbot/{id}/check-token',[ChatbotController::class, 'checkToken']);
     
 });
+
+// for super user
+
+Route::middleware(['auth', 'superuser'])->group(function () {
+    Route::get('/admin/users', [UserController::class, 'index'])->name('users.index');
+    Route::get('/admin/users/list', [UserController::class, 'getUsers'])->name('users.list');
+    Route::get('/admin/users/count', [UserController::class, 'countUsers'])->name('users.count');
+    Route::get('/admin/track', [UserController::class, 'tracker'])->name('users.track');
+});
+
 
 
 // log in route start from here

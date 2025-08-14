@@ -21,6 +21,8 @@ return new class extends Migration
             $table->string('bot_bubble');
             $table->string('user_text_color');
             $table->string('bot_text_color');
+            $table->string('bubble_pattern');
+            $table->string('background_pattern');
             $table->enum('position_x', ['left', 'right']);
             $table->enum('position_y', ['top', 'bottom']);
             $table->integer('offset_x');

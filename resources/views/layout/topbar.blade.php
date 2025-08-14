@@ -97,7 +97,7 @@
                     </div>
                     <i class="fas fa-chevron-right item-arrow"></i>
                 </a>
-                <a class="dropdown-item enhanced-item" href="settings.html">
+                <a class="dropdown-item enhanced-item" href="{{ route('setting') }}">
                     <div class="item-icon">
                         <i class="fas fa-cog"></i>
                     </div>

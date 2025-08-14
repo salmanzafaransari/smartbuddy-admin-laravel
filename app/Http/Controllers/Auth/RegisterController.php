@@ -35,6 +35,7 @@ class RegisterController extends Controller
             'last_name'  => $request->last_name,
             'email'      => $request->email,
             'password'   => Hash::make($request->password),
+            'is_superuser' => false,
         ]);
         Auth::login($user); // log them in immediately
 

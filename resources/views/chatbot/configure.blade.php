@@ -41,29 +41,118 @@ padding: 5px 10px;
 .prev .btn-primary{
     font-size:14px;
 }
+.chatbot-preview-container {
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 15px;
+    background: #fff;
+}
+
+.chatbot-box {
+    width: 100%;
+    border-radius: 10px;
+    overflow: hidden;
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    height: 400px;
+    border: 1px solid #ddd;
+}
+
+.chat-header {
+    padding: 10px;
+    font-weight: bold;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.chat-body {
+    flex: 1;
+    padding: 10px;
+    overflow-y: auto;
+    background: #f5f5f5;
+}
+
+.bot-message {
+    background: #F1F0F0;
+    padding: 8px 12px;
+    border-radius: 10px;
+    margin-bottom: 8px;
+    max-width: 75%;
+    color: #000;
+}
+
+.user-message {
+    background: #DCF8C6;
+    padding: 8px 12px;
+    border-radius: 10px;
+    margin-bottom: 8px;
+    max-width: 75%;
+    margin-left: auto;
+    color: #000;
+}
+
+/* === Speech Bubble Patterns === */
+.pattern-rounded .bot-message,
+.pattern-rounded .user-message {
+    border-radius: 16px;
+}
+
+.pattern-sharp .bot-message,
+.pattern-sharp .user-message {
+    border-radius: 0;
+}
+
+.pattern-bubble .bot-message {
+    border-radius: 16px 16px 16px 0;
+}
+.pattern-bubble .user-message {
+    border-radius: 16px 16px 0 16px;
+}
+
+.pattern-minimal .bot-message,
+.pattern-minimal .user-message {
+    border-radius: 8px;
+    box-shadow: none;
+}
+
+/* === Background Patterns === */
+.bg-solid .chat-body {
+    background: #f5f5f5;
+}
+
+.bg-stripes .chat-body {
+    background: repeating-linear-gradient(
+        45deg,
+        #f5f5f5,
+        #f5f5f5 10px,
+        #e0e0e0 10px,
+        #e0e0e0 20px
+    );
+}
+
+.bg-dots .chat-body {
+    background: radial-gradient(#e0e0e0 1px, transparent 1px);
+    background-size: 20px 20px;
+}
+
+.bg-diagonal .chat-body {
+    background: repeating-linear-gradient(
+        -45deg,
+        #f5f5f5,
+        #f5f5f5 15px,
+        #e0e0e0 15px,
+        #e0e0e0 30px
+    );
+}
 </style>
 @endsection
 @section('content')
 <!-- Configure -->
 <div class="content">
     <div class="row g-4">
-        <!-- Settings Navigation -->
-        <!-- <div class="col-lg-4">
-            <div class="dashboard-card">
-                <div class="card-body">
-                    <nav class="settings-nav">
-                        <a href="#api" class="settings-nav-item active" data-tab="api">
-                            <i class="fas fa-key"></i>
-                            <span>Access Token</span>
-                        </a>
-                        <a href="#notifications" class="settings-nav-item" data-tab="notifications">
-                            <i class="fas fa-image"></i>
-                            <span>Preferences</span>
-                        </a>
-                    </nav>
-                </div>
-            </div>
-        </div> -->
         <div class="col-lg-12">
               <div class="dashboard-card">
                   <nav>
@@ -110,7 +199,7 @@ padding: 5px 10px;
                                 <strong>Important:</strong> Keep your API keys secure and never share them publicly,
                             </div>
                             @if($chatbot->api && $chatbot->api->access_token)
-                                <div class="alert alert-danger">
+                                <div class="alert alert-warning">
                                     <i class="fas fa-book"></i>
                                     <i><strong>Note:</strong> If you regenerate your access token, your bot will not be able to answer any queries until you replace the CSS and JS files.</i>
                                 </div>
@@ -119,11 +208,33 @@ padding: 5px 10px;
                     </div>
                     <div class="tab-pane fade" id="nav-prefence" role="tabpanel" aria-labelledby="nav-prefence-tab">
                         <div class="card-header">
-                            <h5 class="card-title text-center">Customize & Preview</h5>
+                            <h5 class="card-title">Customize</h5>
                         </div>
                         <div class="card-body prev">
                             <div class="row g2">
-                                <div class="col-md-6"></div>
+                                <div class="col-md-6">
+                                    <div class="chatbot-preview-container">
+                                        <!-- Chat Window Preview -->
+                                        <div id="chatbot-preview" class="chatbot-box">
+                                            <div class="chat-header">
+                                                <img id="bot-header-image" src="{{ $chatbot->chatbot_photo ?? 'https://via.placeholder.com/30' }}" width="30" style="margin-right:5px;">
+                                                <span id="bot-header-name">{{ $chatbot->name ?? 'Chatbot' }}</span>
+                                            </div>
+                                            <div class="chat-body">
+                                                <div class="bot-message">Hello! How can I help you?</div>
+                                                <div class="user-message">I want to know about your services.</div>
+                                                <div class="bot-message">Sure! Here’s a quick overview...</div>
+                                            </div>
+                                        </div>
+                                        <!-- Floating Button Preview -->
+                                        <div id="chatbot-btn-preview" class="d-flex justify-content-end" style="margin-bottom: 15px;">
+                                            <button style="border:none;background:none;">
+                                                <img id="bot-btn-image" src="{{ $chatbot->chatbot_photo ?? 'https://via.placeholder.com/50' }}" width="50" style="border-radius:50%;">
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+
                                 <div class="col-md-6">
                                     <!-- resources/views/chatbot/customize.blade.php -->
                                     @if(empty($chatbot->api) || empty($chatbot->api->access_token))
@@ -136,70 +247,98 @@ padding: 5px 10px;
                                         @csrf
         
                                         <input type="hidden" name="chatbot_id" value="{{ $chatbot->id }}">
+                                        <input type="hidden" name="user_id" value="{{ $chatbot->user_id }}">
                                         
                                         <div class="row">
-                                        <div class="col-md-12">
-                                            <!-- Preset Themes -->
-                                            <div class="form-group">
-                                            <label>Preset Theme</label>
-                                            <select id="preset-theme" class="form-control">
-                                            <option value="">-- Select a Theme --</option>
-                                            </select>
-                                            </div>
-                                        </div>
-                                        <input type="hidden" name="user_text_color" id="user_text_color" value="{{ $chatbot->preference->user_text_color ?? '#000000' }}">
-                                        <input type="hidden" name="bot_text_color" id="bot_text_color"  value="{{ $chatbot->preference->bot_text_color ?? '#000000' }}">
-                                        <div class="col-md-4">
-                                            <div class="form-group">
-                                                <input type="color" name="primary_color" id="primary_color" value="{{ $chatbot->preference->primary_color ?? '#0673f1' }}" required><br/>
-                                                <label>Primary Color</label>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <div class="form-group">
-                                                <input type="color" name="user_bubble" id="user_bubble" value="{{ $chatbot->preference->user_bubble ?? '#DCF8C6' }}" required><br/>
-                                                <label>User Message Color</label>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <div class="form-group">
-                                                <input type="color" name="bot_bubble" id="bot_bubble" value="{{ $chatbot->preference->bot_bubble ?? '#F1F0F0' }}" required><br/>
-                                                <label>Bot Message Color</label>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label>Position X (Horizontal)</label>
-                                                <select name="position_x" id="position_x" class="form-control" required>
-                                                    <option value="left" {{ isset($chatbot->preference) && $chatbot->preference->position_x === 'left' ? 'selected' : '' }}>Left</option>
-                                                    <option value="right" {{ isset($chatbot->preference) && $chatbot->preference->position_x === 'right' ? 'selected' : '' }}>Right</option>
+                                            <div class="col-md-12">
+                                                <!-- Preset Themes -->
+                                                <div class="form-group">
+                                                <label>Preset Theme</label>
+                                                <select id="preset-theme" name="theme" class="form-control">
+                                                <option value="">-- Select a Theme --</option>
                                                 </select>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label>Position Y (Vertical)</label>
-                                                <select name="position_y" id="position_y" class="form-control" required>
-                                                    <option value="bottom" {{ isset($chatbot->preference) && $chatbot->preference->position_y === 'bottom' ? 'selected' : '' }}>Bottom</option>
-                                                    <option value="top" {{ isset($chatbot->preference) && $chatbot->preference->position_y === 'top' ? 'selected' : '' }}>Top</option>
-                                                </select>
+
+                                            <!-- ADDED: Pattern Style select (will be submitted as pattern_style) -->
+                                            <div class="col-md-6">
+                                                <!-- NEW: Speech Bubble Pattern -->
+                                                <div class="form-group">
+                                                    <label>Speech Bubble Style</label>
+                                                    <select id="speech-bubble-style" name="bubble_pattern" class="form-control">
+                                                        <option value="rounded" {{ ($chatbot->preference->bubble_pattern ?? '') === 'rounded' ? 'selected' : '' }}>Rounded</option>
+                                                        <option value="sharp"  {{ ($chatbot->preference->bubble_pattern ?? '') === 'sharp' ? 'selected' : '' }}>Sharp Edges</option>
+                                                        <option value="bubble"  {{ ($chatbot->preference->bubble_pattern ?? '') === 'bubble' ? 'selected' : '' }}>Speech Bubble Corner</option>
+                                                        <option value="minimal"  {{ ($chatbot->preference->bubble_pattern ?? '') === 'minimal' ? 'selected' : '' }}>Minimal Flat</option>
+                                                    </select>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label>Offset X (px)</label>
-                                                <input type="number" name="offset_x" id="offset_x" value="{{ $chatbot->preference->offset_x ?? '20' }}" class="form-control" required>
+                                            <div class="col-md-6">
+                                                <!-- NEW: Background Pattern -->
+                                                <div class="form-group">
+                                                    <label>Background Pattern</label>
+                                                    <select id="background-pattern-style" name="background_pattern" class="form-control">
+                                                        <option value="solid" {{ ($chatbot->preference->background_pattern ?? '') === 'solid' ? 'selected' : '' }}>Solid</option>
+                                                        <option value="stripes" {{ ($chatbot->preference->background_pattern ?? '') === 'stripes' ? 'selected' : '' }}>Stripes</option>
+                                                        <option value="dots" {{ ($chatbot->preference->background_pattern ?? '') === 'dots' ? 'selected' : '' }}>Dots</option>
+                                                        <option value="diagonal" {{ ($chatbot->preference->background_pattern ?? '') === 'diagonal' ? 'selected' : '' }}>Diagonal Lines</option>
+                                                    </select>
+                                                </div>
+
                                             </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label>Offset Y (px)</label>
-                                                <input type="number" name="offset_y" id="offset_y" value="{{ $chatbot->preference->offset_y ?? '20' }}" class="form-control" required>
+                                            <div class="col-md-4">
+                                                <input type="hidden" name="user_text_color" id="user_text_color" value="{{ $chatbot->preference->user_text_color ?? '#000000' }}">
+                                                <input type="hidden" name="bot_text_color" id="bot_text_color"  value="{{ $chatbot->preference->bot_text_color ?? '#000000' }}">
+                                                <div class="form-group">
+                                                    <input type="color" name="primary_color" id="primary_color" value="{{ $chatbot->preference->primary_color ?? '#0673f1' }}" required><br/>
+                                                    <label>Primary Color</label>
+                                                </div>
                                             </div>
-                                        </div>
-                                        </div>
-                                        <div class="d-flex w-100 justify-content-end">
-                                            <button type="submit" class="btn btn-primary mt-2">Generate & Download</button>
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <input type="color" name="user_bubble" id="user_bubble" value="{{ $chatbot->preference->user_bubble ?? '#DCF8C6' }}" required><br/>
+                                                    <label>User Message Color</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <input type="color" name="bot_bubble" id="bot_bubble" value="{{ $chatbot->preference->bot_bubble ?? '#F1F0F0' }}" required><br/>
+                                                    <label>Bot Message Color</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label>Position X (Horizontal)</label>
+                                                    <select name="position_x" id="position_x" class="form-control" required>
+                                                        <option value="left" {{ isset($chatbot->preference) && $chatbot->preference->position_x === 'left' ? 'selected' : '' }}>Left</option>
+                                                        <option value="right" {{ isset($chatbot->preference) && $chatbot->preference->position_x === 'right' ? 'selected' : '' }}>Right</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label>Position Y (Vertical)</label>
+                                                    <select name="position_y" id="position_y" class="form-control" required>
+                                                        <option value="bottom" {{ isset($chatbot->preference) && $chatbot->preference->position_y === 'bottom' ? 'selected' : '' }}>Bottom</option>
+                                                        <option value="top" {{ isset($chatbot->preference) && $chatbot->preference->position_y === 'top' ? 'selected' : '' }}>Top</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label>Offset X (px)</label>
+                                                    <input type="number" name="offset_x" id="offset_x" value="{{ $chatbot->preference->offset_x ?? '20' }}" class="form-control" required>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label>Offset Y (px)</label>
+                                                    <input type="number" name="offset_y" id="offset_y" value="{{ $chatbot->preference->offset_y ?? '20' }}" class="form-control" required>
+                                                </div>
+                                            </div>
+                                            <div class="d-flex w-100 justify-content-end">
+                                                <button type="submit" class="btn btn-primary mt-2">Generate & Download</button>
+                                            </div>
                                         </div>
                                     </form>
                                     @endif
@@ -327,12 +466,17 @@ $(document).on('click', '.copy-token-btn', function () {
     };
 
     const themeSelect = document.getElementById('preset-theme');
+    const selectedTheme = "{{ $chatbot->preference->theme ?? 'whatsapp' }}";
 
     // Populate select options dynamically
     Object.keys(themes).forEach(key => {
         const opt = document.createElement('option');
         opt.value = key;
         opt.textContent = key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+
+        if (key === selectedTheme) {
+            opt.selected = true;
+        }
         themeSelect.appendChild(opt);
     });
 
@@ -364,8 +508,102 @@ $(document).on('click', '.copy-token-btn', function () {
             // Hidden inputs for form submission
             document.getElementById('user_text_color').value = userTextColor;
             document.getElementById('bot_text_color').value = botTextColor;
+
+            // Update preview to keep pattern + colors in sync
+            updatePreview();
         }
     });
 </script>
+<script>
+    // Ensure previewBox variable exists
+    const previewBox = document.getElementById('chatbot-preview');
+    const bubbleSelect = document.getElementById('speech-bubble-style');
+    const bgSelect = document.getElementById('background-pattern-style');
 
+    bubbleSelect.addEventListener('change', function () {
+        previewBox.classList.remove('pattern-rounded','pattern-sharp','pattern-bubble','pattern-minimal');
+        previewBox.classList.add(`pattern-${this.value}`);
+        updatePreview();
+    });
+
+    bgSelect.addEventListener('change', function () {
+        previewBox.classList.remove('bg-solid','bg-stripes','bg-dots','bg-diagonal');
+        previewBox.classList.add(`bg-${this.value}`);
+        updatePreview();
+    });
+
+    document.addEventListener('DOMContentLoaded', function () {
+        if (!previewBox) return;
+
+        // Apply prefilled bubble pattern
+        const bubbleVal = bubbleSelect.value;
+        previewBox.classList.remove('pattern-rounded','pattern-sharp','pattern-bubble','pattern-minimal');
+        previewBox.classList.add(`pattern-${bubbleVal}`);
+
+        // Apply prefilled background pattern
+        const bgVal = bgSelect.value;
+        previewBox.classList.remove('bg-solid','bg-stripes','bg-dots','bg-diagonal');
+        previewBox.classList.add(`bg-${bgVal}`);
+
+        // Apply theme if already set
+        if (themeSelect && themeSelect.value && themes[themeSelect.value]) {
+            // Optional: Do something with selected theme if needed
+        }
+
+        // Finally update colors, images, text, etc.
+        updatePreview();
+    });
+
+
+    function updatePreview() {
+        if (!previewBox) return;
+        const primaryColor = document.getElementById('primary_color').value;
+        const userBubble   = document.getElementById('user_bubble').value;
+        const botBubble    = document.getElementById('bot_bubble').value;
+
+        // Set CSS vars used by pattern styles (keeps pattern logic working)
+        previewBox.style.setProperty('--user-bubble', userBubble);
+        previewBox.style.setProperty('--bot-bubble', botBubble);
+
+        // Header color
+        const headerEl = document.querySelector('#chatbot-preview .chat-header');
+        if (headerEl) headerEl.style.backgroundColor = primaryColor;
+
+        // User messages
+        document.querySelectorAll('#chatbot-preview .user-message').forEach(el => {
+            el.style.backgroundColor = userBubble;
+            el.style.color = getContrastYIQ(userBubble);
+        });
+
+        // Bot messages
+        document.querySelectorAll('#chatbot-preview .bot-message').forEach(el => {
+            el.style.backgroundColor = botBubble;
+            el.style.color = getContrastYIQ(botBubble);
+        });
+    }
+
+    // Image + Name Live Change
+    document.getElementById('bot_image_input')?.addEventListener('input', function () {
+        document.getElementById('bot-btn-image').src = this.value;
+        document.getElementById('bot-header-image').src = this.value;
+    });
+
+    document.getElementById('bot_name_input')?.addEventListener('input', function () {
+        document.getElementById('bot-header-name').textContent = this.value;
+    });
+
+    // Color update on input change
+    ['primary_color', 'user_bubble', 'bot_bubble'].forEach(id => {
+        document.getElementById(id).addEventListener('input', updatePreview);
+    });
+
+    // Theme change -> keep preview in sync
+    themeSelect.addEventListener('change', function () {
+        const selected = themes[this.value];
+        if (selected) {
+            updatePreview();
+        }
+    });
+
+</script>
 @endsection

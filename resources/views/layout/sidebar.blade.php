@@ -11,6 +11,30 @@
         </div>
         
         <div class="sidebar-menu">
+            <!-- Administration -->
+             @auth
+                @if(auth()->user()->is_superuser)
+                <div class="menu-section">
+                    <div class="menu-section-title">Administration</div>
+                    <ul class="menu-items">
+                        <li class="menu-item">
+                            <a href="{{route('users.index')}}" class="menu-link">
+                                <i class="fas fa-users menu-icon"></i>
+                                <span class="menu-text">User Management</span>
+                                <span class="menu-badge" id="allUserCount">loading</span>
+                            </a>
+                        </li>
+                        <li class="menu-item">
+                            <a href="{{route('users.track')}}" class="menu-link">
+                                <i class="fas fa-location menu-icon"></i>
+                                <span class="menu-text">Tracker</span>
+                                <span class="menu-badge" id="allPageCount">loading</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                @endif
+            @endauth
             <!-- Main Navigation -->
             <div class="menu-section">
                 <div class="menu-section-title">Main</div>
@@ -50,79 +74,28 @@
                 </ul>
             </div>
 
-            <!-- AI Tools -->
-            <div class="menu-section">
-                <div class="menu-section-title">AI Tools</div>
-                <ul class="menu-items">
-                    <li class="menu-item">
-                        <a href="ai-chat.html" class="menu-link">
-                            <i class="fas fa-comments menu-icon"></i>
-                            <span class="menu-text">AI Chat</span>
-                            <span class="menu-badge success">New</span>
-                        </a>
-                    </li>
-                    <li class="menu-item">
-                        <a href="ai-tld-finder.html" class="menu-link">
-                            <i class="fas fa-globe menu-icon"></i>
-                            <span class="menu-text">AI.TLD Finder</span>
-                            <span class="menu-badge success">New</span>
-                        </a>
-                    </li>
-                    <li class="menu-item">
-                        <a href="ai-writer.html" class="menu-link">
-                            <i class="fas fa-pen-fancy menu-icon"></i>
-                            <span class="menu-text">AI Writer</span>
-                            <span class="menu-badge warning">Pro</span>
-                        </a>
-                    </li>
-                    <li class="menu-item">
-                        <a href="ai-image.html" class="menu-link">
-                            <i class="fas fa-image menu-icon"></i>
-                            <span class="menu-text">Image Generator</span>
-                        </a>
-                    </li>
-                    <li class="menu-item">
-                        <a href="ai-models.html" class="menu-link">
-                            <i class="fas fa-robot menu-icon"></i>
-                            <span class="menu-text">AI Models</span>
-                            <span class="menu-badge warning">24</span>
-                        </a>
-                    </li>
-                    <li class="menu-item">
-                        <a href="ai-tools-library.html" class="menu-link">
-                            <i class="fas fa-toolbox menu-icon"></i>
-                            <span class="menu-text">Tools Library</span>
-                        </a>
-                    </li>
-                </ul>
-            </div>
-
             <!-- User Management -->
             <div class="menu-section">
                 <div class="menu-section-title">User</div>
                 <ul class="menu-items">
                     <li class="menu-item">
-                        <a href="profile.html" class="menu-link">
+                        <a href="{{route('profile')}}" class="menu-link">
                             <i class="fas fa-user menu-icon"></i>
                             <span class="menu-text">Profile</span>
                         </a>
                         <ul class="submenu-items">
-                            <li><a href="profile.html" class="submenu-link">
-                                <i class="fas fa-user submenu-icon"></i>
+                            <li><a href="{{route('profile')}}" class="submenu-link">
+                                <i class="fas fa-id-card submenu-icon"></i>
                                 <span class="menu-text">View Profile</span>
                             </a></li>
-                            <li><a href="edit-profile.html" class="submenu-link">
+                            <li><a href="{{route('editProfile')}}" class="submenu-link">
                                 <i class="fas fa-edit submenu-icon"></i>
                                 <span class="menu-text">Edit Profile</span>
-                            </a></li>
-                            <li><a href="user-profile.html" class="submenu-link">
-                                <i class="fas fa-id-card submenu-icon"></i>
-                                <span class="menu-text">User Profile</span>
                             </a></li>
                         </ul>
                     </li>
                     <li class="menu-item">
-                        <a href="settings.html" class="menu-link">
+                        <a href="{{route('setting')}}" class="menu-link">
                             <i class="fas fa-cog menu-icon"></i>
                             <span class="menu-text">Settings</span>
                         </a>
@@ -130,100 +103,7 @@
                 </ul>
             </div>
 
-            <!-- Administration -->
-            <div class="menu-section">
-                <div class="menu-section-title">Administration</div>
-                <ul class="menu-items">
-                    <li class="menu-item">
-                        <a href="user-management.html" class="menu-link">
-                            <i class="fas fa-users menu-icon"></i>
-                            <span class="menu-text">User Management</span>
-                            <span class="menu-badge">1247</span>
-                        </a>
-                    </li>
-                    <li class="menu-item">
-                        <a href="pricing.html" class="menu-link">
-                            <i class="fas fa-credit-card menu-icon"></i>
-                            <span class="menu-text">Plans & Pricing</span>
-                        </a>
-                    </li>
-                </ul>
-            </div>
 
-            <!-- Templates -->
-            <div class="menu-section">
-                <div class="menu-section-title">Templates</div>
-                <ul class="menu-items">
-                    <li class="menu-item">
-                        <a href="ui-components.html" class="menu-link">
-                            <i class="fas fa-layer-group menu-icon"></i>
-                            <span class="menu-text">UI Components</span>
-                        </a>
-                    </li>
-                    <li class="menu-item">
-                        <a href="blank-template.html" class="menu-link">
-                            <i class="fas fa-file-alt menu-icon"></i>
-                            <span class="menu-text">Blank Template</span>
-                        </a>
-                    </li>
-                    <li class="menu-item">
-                        <a href="maintenance.html" class="menu-link">
-                            <i class="fas fa-tools menu-icon"></i>
-                            <span class="menu-text">Maintenance</span>
-                        </a>
-                    </li>
-                    <li class="menu-item">
-                        <a href="coming-soon.html" class="menu-link">
-                            <i class="fas fa-clock menu-icon"></i>
-                            <span class="menu-text">Coming Soon</span>
-                        </a>
-                    </li>
-                    <li class="menu-item">
-                        <a href="404.html" class="menu-link">
-                            <i class="fas fa-exclamation-triangle menu-icon"></i>
-                            <span class="menu-text">404 Error</span>
-                        </a>
-                    </li>
-                    <li class="menu-item">
-                        <a href="500.html" class="menu-link">
-                            <i class="fas fa-server menu-icon"></i>
-                            <span class="menu-text">500 Error</span>
-                        </a>
-                    </li>
-                </ul>
-            </div>
-
-            <!-- Authentication -->
-            <div class="menu-section">
-                <div class="menu-section-title">Authentication</div>
-                <ul class="menu-items">
-                    <li class="menu-item">
-                        <a href="user-login.html" class="menu-link">
-                            <i class="fas fa-sign-in-alt menu-icon"></i>
-                            <span class="menu-text">Login</span>
-                        </a>
-                    </li>
-                    <li class="menu-item">
-                        <a href="user-register.html" class="menu-link">
-                            <i class="fas fa-user-plus menu-icon"></i>
-                            <span class="menu-text">Register</span>
-                        </a>
-                    </li>
-                    <li class="menu-item">
-                        <a href="user-register-two-step.html" class="menu-link">
-                            <i class="fas fa-shield-alt menu-icon"></i>
-                            <span class="menu-text">Two-Step Verification</span>
-                            <span class="menu-badge security">Secure</span>
-                        </a>
-                    </li>
-                    <li class="menu-item">
-                        <a href="user-forgot-password.html" class="menu-link">
-                            <i class="fas fa-key menu-icon"></i>
-                            <span class="menu-text">Forgot Password</span>
-                        </a>
-                    </li>
-                </ul>
-            </div>
         </div>
         
         <div class="sidebar-footer">

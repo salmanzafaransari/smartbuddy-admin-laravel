@@ -1,7 +1,7 @@
 <x-mail::message>
 # Account Deletion Request
 
-Hello **{{ $user->name }}**,
+Hello **{{ $user->first_name }} {{ $user->last_name }}**,
 
 We received a request to delete your account on **{{ config('app.name') }}**.  
 Use the verification code below to confirm this action:

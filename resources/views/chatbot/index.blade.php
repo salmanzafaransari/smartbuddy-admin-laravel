@@ -1,6 +1,8 @@
 @extends('default')
 @section('pageTitle', 'Chatbot')
 @section('style')
+<link href="{{ asset('assets/chatbot/smartbuddy.min.css') }}" rel="stylesheet">
+<script src="{{ asset('assets/chatbot/smartbuddy.min.js') }}"></script>
 <style>
  .notification-toast {
    position: fixed;
@@ -21,6 +23,7 @@
   overflow:hidden;
   margin-top:-65px;
   background-color:#fff;
+  border:3px solid #7259b5;
  }
  .img-box img{
   width: 100%;
@@ -94,6 +97,10 @@
     scrollbar-width: thin;
     scrollbar-color: var(--primary) #f1f1f1;
 }
+.border-img{
+    border:1px solid var(--bs-gray-500);
+    border-radius:10px;
+}
 </style>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" integrity="sha512-nMNlpuaDPrqlEls3IX/Q56H36qvBASwb3ipuo3MxeWbsQB1881ox0cRv7UPTgBlriqoynt35KjEwgGUeUXIPnw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 @endsection
@@ -145,7 +152,7 @@
                                 <a href="{{ route('chatbot.configure', $bot->id) }}" class="btn btn-sm btn-outline-success p-2">
                                     <i class="fas fa-cog"></i> Configure
                                 </a>
-                                <button class="btn btn-sm btn-outline-danger p-2" onclick="deleteModel('{{ $bot->id }}')">
+                                <button class="btn btn-sm btn-outline-danger p-2 delete" data-bsid="{{ $bot->id }}" data-bsname="{{ $bot->name }}">
                                     <i class="fas fa-trash"></i> Delete
                                 </button>
                             </div>
@@ -176,7 +183,7 @@
                     <div class="row g-3">
                         <!-- Avatar Upload -->
                         <div class="col-md-6">
-                            <div class="card-body text-center">
+                            <div class="card-body text-center border-img pt-4">
                                 <div class="profile-avatar mb-3">
                                     <img width="100" src="{{ asset('assets/images/favicon.png') }}" alt="Profile" class="rounded-circle" id="profileImage">
                                     <button type="button" class="btn btn-sm btn-primary bg-gredient avatar-edit" onclick="document.getElementById('imageUpload').click()">
@@ -378,10 +385,10 @@
 </div>
 <!-- Confirmation Modal -->
 <div class="modal fade" id="confirmModal" tabindex="-1">
-    <div class="modal-dialog  modal-dialog-centered modal-sm">
+    <div class="modal-dialog  modal-dialog-centered ">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Confirm Delete</h5>
+                <h5 class="modal-title delConf">Confirm Delete</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
@@ -392,7 +399,7 @@
                 <form id="deleteForm" method="POST" action="">
                     @csrf
                     @method('DELETE')
-                    <button type="submit" class="btn btn-danger">Confirm</button>
+                    <button type="submit" class="btn btn-outline-danger">Confirm</button>
                 </form>
             </div>
         </div>
@@ -488,12 +495,15 @@ jQuery(document).ready(function($) {
 });
 
 // DELETE
-function deleteModel(botId) {
+$('.delete').on('click', function() {
+    var botname = $(this).data('bsname');
+    var botId = $(this).data('bsid');
+    $('.delConf').text("Delete " + botname)
     const url = `/chatbot/${botId}`;
     document.getElementById('deleteForm').setAttribute('action', url);
     const modal = new bootstrap.Modal(document.getElementById('confirmModal'));
     modal.show();
-}
+});
 
 // EDIT
 function editModel(botId) {

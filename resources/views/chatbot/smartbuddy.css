@@ -54,6 +54,8 @@
 #chat-send-btn{
   height: 40px !important;
 }
+
+
 /* Chat header */
 .chat-header {
   display: flex;
@@ -141,4 +143,75 @@
 }
 #clear-chat-btn:hover {
   background: darkred;
+}
+.pattern-rounded .chat-msg.user,
+.pattern-rounded .chat-msg.bot {
+  border-radius: 16px;
+}
+.pattern-sharp .chat-msg.user,
+.pattern-sharp .chat-msg.bot {
+  border-radius: 0;
+}
+.pattern-bubble .chat-msg.bot {
+  border-radius: 16px 16px 16px 0;
+}
+.pattern-bubble .chat-msg.user {
+  border-radius: 16px 16px 0 16px;
+}
+.pattern-minimal .chat-msg.user,
+.pattern-minimal .chat-msg.bot {
+  border-radius: 8px;
+  box-shadow: none;
+}
+.pattern-futuristic .chat-msg.bot {
+  border-radius: 12px 2px 12px 2px;
+}
+.pattern-futuristic .chat-msg.user {
+  border-radius: 2px 12px 2px 12px;
+}
+.pattern-comic .chat-msg.user,
+.pattern-comic .chat-msg.bot {
+  border-radius: 10px;
+  border: 2px solid #000;
+}
+
+/* Background patterns */
+.bg-solid .chat-body {
+  background: #f5f5f5;
+}
+.bg-stripes .chat-body {
+  background: repeating-linear-gradient(
+    45deg,
+    #f5f5f5,
+    #f5f5f5 10px,
+    #e0e0e0 10px,
+    #e0e0e0 20px
+  );
+}
+.bg-dots .chat-body {
+  background: radial-gradient(#e0e0e0 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+.bg-diagonal .chat-body {
+  background: repeating-linear-gradient(
+    -45deg,
+    #f5f5f5,
+    #f5f5f5 15px,
+    #e0e0e0 15px,
+    #e0e0e0 30px
+  );
+}
+.bg-futuristic .chat-body {
+  background: linear-gradient(#e0e0e0 1px, transparent 1px),
+              linear-gradient(90deg, #e0e0e0 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+.bg-comic .chat-body {
+  background: repeating-linear-gradient(
+    45deg,
+    #fff,
+    #fff 15px,
+    #f0f0f0 15px,
+    #f0f0f0 30px
+  );
 }

@@ -8,6 +8,7 @@ use Carbon\Carbon;
 use App\Mail\AccountDeletionCodeMail;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Session;
+use App\Models\Chatbot;
 
 class ProfileController extends Controller
 {
@@ -58,7 +59,7 @@ class ProfileController extends Controller
         return redirect()->route('profile')->with('success', 'Profile updated successfully.');
     }
     public function profile(){
-       $user = auth()->user();
+        $user = auth()->user();
         $lastLoginAt = $user->last_login_at;
 
         $formattedLogin = 'Never logged in';
@@ -79,9 +80,17 @@ class ProfileController extends Controller
 
             $formattedLogin = $prefix . ' at ' . $loginTime->format('g:i A');
         }
+        $totalModels = Chatbot::where('user_id', $user->id)->count();
+        $chatbots = Chatbot::where('user_id', Auth::id())
+        ->withCount('logs') // counts total calls for each chatbot
+        ->latest()
+        ->get();
+        $totalBotCalls = $chatbots->sum('logs_count');
 
         return view('profile.profile', [
             'formattedLogin' => $formattedLogin,
+            'totalModels' => $totalModels,
+            'totalBotCalls' => $totalBotCalls,
         ]);
     }
     public function setting()
