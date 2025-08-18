@@ -14,26 +14,26 @@
            <div class="dashboard-card">
                <div class="card-body">
                    <nav class="settings-nav">
-                       <a href="#general" class="settings-nav-item active" data-tab="general">
+                       <!-- <a href="#general" class="settings-nav-item active" data-tab="general">
                            <i class="fas fa-cog"></i>
                            <span>General</span>
-                       </a>
-                       <a href="#notifications" class="settings-nav-item" data-tab="notifications">
+                       </a> -->
+                       <!-- <a href="#notifications" class="settings-nav-item" data-tab="notifications">
                            <i class="fas fa-bell"></i>
                            <span>Notifications</span>
-                       </a>
-                       <a href="#security" class="settings-nav-item" data-tab="security">
+                       </a> -->
+                       <a href="#security" class="settings-nav-item active" data-tab="security">
                            <i class="fas fa-shield-alt"></i>
                            <span>Security</span>
                        </a>
-                       <a href="#api" class="settings-nav-item" data-tab="api">
+                       <!-- <a href="#api" class="settings-nav-item" data-tab="api">
                            <i class="fas fa-key"></i>
                            <span>API Keys</span>
-                       </a>
-                       <a href="#billing" class="settings-nav-item" data-tab="billing">
+                       </a> -->
+                       <!-- <a href="#billing" class="settings-nav-item" data-tab="billing">
                            <i class="fas fa-credit-card"></i>
                            <span>Billing</span>
-                       </a>
+                       </a> -->
                        <a href="#advanced" class="settings-nav-item" data-tab="advanced">
                            <i class="fas fa-tools"></i>
                            <span>Advanced</span>
@@ -46,7 +46,7 @@
        <!-- Settings Content -->
        <div class="col-lg-9">
            <!-- General Settings -->
-           <div class="settings-tab active" id="general">
+           <!-- <div class="settings-tab active" id="general">
                <div class="dashboard-card">
                    <div class="card-header">
                        <h5 class="card-title">General Settings</h5>
@@ -118,10 +118,10 @@
                        </form>
                    </div>
                </div>
-           </div>
+           </div> -->
            
            <!-- Notifications Settings -->
-           <div class="settings-tab" id="notifications">
+           <!-- <div class="settings-tab" id="notifications">
                <div class="dashboard-card">
                    <div class="card-header">
                        <h5 class="card-title">Notification Preferences</h5>
@@ -176,10 +176,10 @@
                        </div>
                    </div>
                </div>
-           </div>
+           </div> -->
            
            <!-- Security Settings -->
-           <div class="settings-tab" id="security">
+           <div class="settings-tab active" id="security">
                <div class="dashboard-card">
                    <div class="card-header">
                        <h5 class="card-title">Security Settings</h5>
@@ -187,49 +187,15 @@
                    <div class="card-body">
                        <div class="security-section">
                            <h6>Password</h6>
-                           <p class="text-muted">Last changed 30 days ago</p>
-                           <button class="btn btn-outline-primary">Change Password</button>
-                       </div>
-                       
-                       <div class="security-section mt-4">
-                           <h6>Two-Factor Authentication</h6>
-                           <div class="d-flex justify-content-between align-items-center">
-                               <div>
-                                   <p class="mb-1">Add an extra layer of security to your account</p>
-                                   <small class="text-muted">Status: <span class="text-danger">Disabled</span></small>
-                               </div>
-                               <button class="btn btn-primary">Enable 2FA</button>
-                           </div>
-                       </div>
-                       
-                       <div class="security-section mt-4">
-                           <h6>Active Sessions</h6>
-                           <div class="session-list">
-                               <div class="session-item">
-                                   <div class="session-info">
-                                       <strong>Current Session</strong>
-                                       <small class="text-muted d-block">Chrome on Windows ??? San Francisco, CA</small>
-                                       <small class="text-muted">Last active: Now</small>
-                                   </div>
-                                   <span class="badge bg-success">Current</span>
-                               </div>
-                               <div class="session-item">
-                                   <div class="session-info">
-                                       <strong>Mobile App</strong>
-                                       <small class="text-muted d-block">iOS App ??? San Francisco, CA</small>
-                                       <small class="text-muted">Last active: 2 hours ago</small>
-                                   </div>
-                                   <button class="btn btn-sm btn-outline-danger">Revoke</button>
-                               </div>
-                           </div>
-                           <button class="btn btn-outline-danger mt-3">Sign out of all other sessions</button>
+                           <p class="text-muted">Last changed {{ $lastPasswordChange }} {{ Str::plural('day', $lastPasswordChange) }} ago</p>
+                           <button class="btn btn-outline-primary" id="changePwd">Change Password</button>
                        </div>
                    </div>
                </div>
            </div>
            
            <!-- API Keys Settings -->
-           <div class="settings-tab" id="api">
+           <!-- <div class="settings-tab" id="api">
                <div class="dashboard-card">
                    <div class="card-header">
                        <h5 class="card-title">API Keys</h5>
@@ -269,10 +235,10 @@
                        </div>
                    </div>
                </div>
-           </div>
+           </div> -->
            
            <!-- Billing Settings -->
-           <div class="settings-tab" id="billing">
+           <!-- <div class="settings-tab" id="billing">
                <div class="dashboard-card">
                    <div class="card-header">
                        <h5 class="card-title">Billing & Subscription</h5>
@@ -332,7 +298,7 @@
                        </div>
                    </div>
                </div>
-           </div>
+           </div> -->
            
            <!-- Advanced Settings -->
            <div class="settings-tab" id="advanced">
@@ -391,6 +357,40 @@
         </div>
     </div>
 </div>
+<!-- Change Password Modal -->
+<div class="modal fade" id="changePassModal" tabindex="-1" aria-labelledby="changePassword" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-warning text-white">
+                <h5 class="modal-title" id="changePassword">Change Password</h5>
+                <button type="button" class="btn-close text-white" data-bs-dismiss="modal"></button>
+            </div>
+            <form>
+             <div class="modal-body">
+                 <p>Enter your current password and new password to update it.</p>
+                 
+                 <input type="password" id="currentPassword" name="current_pass" class="form-control mb-2" placeholder="Current password" autocomplete="false"><br/>
+                 
+                 <small id="passwordError" class="mt-2 d-block text-danger"></small>
+                 <div class="form-group">
+                  <input type="password" id="newPassword" name="new_password" class="form-control" placeholder="New password" autocomplete="false">
+                 </div>
+                 <div class="form-group">
+                  <input type="password" id="repeatPassword" name="repeat_password" class="form-control" placeholder="Repeate password" autocomplete="false">
+                 </div>
+             </div>
+
+             <div class="modal-footer justify-content-between">
+                 <button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal">Cancel</button>
+                 <button type="button" id="changePasswordBtn" class="btn btn-primary">
+                     Change Password
+                 </button>
+             </div>
+            </form>
+
+        </div>
+    </div>
+</div>
 @endsection
 @section('scripts')
 <script>
@@ -427,7 +427,6 @@ $(document).ready(function() {
         });
     });
 
-
     // Step 2: Confirm deletion
     $('#confirmDeleteBtn').on('click', function() {
         let code = $('#confirmationCode').val().trim();
@@ -462,6 +461,77 @@ $(document).ready(function() {
             }
         });
     });
+
+    $('#changePwd').on('click', function(){
+      let modalEl = document.getElementById('changePassModal');
+      let myModal = new bootstrap.Modal(modalEl, {
+          backdrop: 'static', // Prevent closing on click outside
+          keyboard: false     // Prevent closing on ESC
+      });
+      myModal.show();
+    })
+
+    $(document).on('click', '#changePasswordBtn', function() {
+    var currentPass = $('#currentPassword').val().trim();
+    var newPass     = $('#newPassword').val().trim();
+    var repeatPass  = $('#repeatPassword').val().trim();
+    var errorEl     = $('#passwordError');
+
+    // Regex: minimum 8 chars, at least 1 special character
+    var passwordRegex = /^(?=.*[!@#$%^&*()_+=[\]{};':"\\|,.<>/?-]).{8,}$/;
+
+    // Validation
+    if (!currentPass) {
+        errorEl.text("Please enter your current password.");
+        return;
+    }
+
+    if (!passwordRegex.test(newPass)) {
+        errorEl.text("New password must be at least 8 characters and contain at least one special character.");
+        return;
+    }
+
+    if (newPass !== repeatPass) {
+        errorEl.text("Passwords must the same.");
+        return;
+    }
+
+    errorEl.text("");
+        // AJAX request to change password
+        $.ajax({
+            url: "{{ route('user.changePassword') }}", // your route
+            method: "POST",
+            data: {
+                current_password: currentPass,
+                new_password: newPass,
+                _token: "{{ csrf_token() }}"
+            },
+            beforeSend: function() {
+                $('#changePasswordBtn').prop('disabled', true).text('Updating...');
+            },
+            success: function(response) {
+                if(response.success) {
+                    errorEl.removeClass('text-danger').addClass('text-success').text(response.message);
+                    // Close modal after short delay
+                    setTimeout(function() {
+                        $('#changePassModal').modal('hide');
+                        $('#currentPassword, #newPassword, #repeatPassword').val('');
+                        errorEl.text('').removeClass('text-success');
+                    }, 1500);
+                } else {
+                    errorEl.text(response.message).removeClass('text-success').addClass('text-danger');
+                }
+            },
+            error: function(xhr) {
+                errorEl.text(xhr.responseJSON?.message || 'Something went wrong!').removeClass('text-success').addClass('text-danger');
+            },
+            complete: function() {
+                $('#changePasswordBtn').prop('disabled', false).text('Change Password');
+            }
+        });
+     });
+
+    
 });
 </script>
 @endsection

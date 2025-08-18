@@ -110,7 +110,7 @@
                 
                 <a class="dropdown-item enhanced-item logout-item mb-2"
                 href="#"
-                onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                onclick="confirmLogout();">
                     <div class="item-icon">
                         <i class="fas fa-sign-out-alt"></i>
                     </div>
@@ -125,6 +125,23 @@
         </div>
     </div>
 </header>
+<div class="modal fade" id="confirmModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-sm modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Confirm Logout</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <p>Are you sure you want to log out?</p>
+      </div>
+      <div class="modal-footer justify-content-between">
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-outline-danger" id="confirmLogoutBtn">Logout</button>
+      </div>
+    </div>
+  </div>
+</div>
 @auth
     <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
         @csrf

@@ -14,6 +14,11 @@
     
     <!-- Custom CSS -->
     <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
+    <style>
+         .bg-gredient{
+        background: linear-gradient(135deg, rgb(102, 126, 234) 0%, rgb(118, 75, 162) 100%);
+        }
+    </style>
 
     @yield('style')
 </head>
@@ -30,6 +35,18 @@
     <script src="{{ asset('vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
     <!-- Custom JS -->
     <script src="{{ asset('assets/js/main.js') }}"></script>
+    <script>
+        function confirmLogout() {
+            // show modal when logout clicked
+            var modal = new bootstrap.Modal(document.getElementById('confirmModal'));
+            modal.show();
+
+            // attach event listener only once
+            document.getElementById('confirmLogoutBtn').onclick = function () {
+                document.getElementById('logout-form').submit();
+            };
+        }
+    </script>
     
 
     @yield('scripts')
@@ -54,7 +71,21 @@
                         $('.totalUsers').text('0');
                     }
                 });
+                $.ajax({
+                    url: "{{ route('tracker.trackCount') }}",
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function(response) {
+                        console.log(response.totalTrackerCount);
+                        // Update sidebar count
+                        $('#allTrackerCount').text(response.totalTrackerCount);
+                    },
+                    error: function(xhr) {
+                        console.log(xhr.responseText);
+                        $('#allTrackerCount').text('0');
+                    }
                 });
+            });
 
         </script>
         @endif

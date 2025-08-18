@@ -39,22 +39,6 @@
                         backgroundColor: 'rgba(54, 162, 235, 0.1)',
                         tension: 0.4,
                         fill: true
-                    },
-                    {
-                        label: 'Images Generated',
-                        data: [800, 1200, 1800, 2200, 2800, 2400, 3200, 3800, 3400, 4200, 4800, 4400],
-                        borderColor: 'rgb(255, 99, 132)',
-                        backgroundColor: 'rgba(255, 99, 132, 0.1)',
-                        tension: 0.4,
-                        fill: true
-                    },
-                    {
-                        label: 'Models Trained',
-                        data: [20, 35, 45, 60, 55, 48, 65, 75, 70, 85, 95, 88],
-                        borderColor: 'rgb(75, 192, 192)',
-                        backgroundColor: 'rgba(75, 192, 192, 0.1)',
-                        tension: 0.4,
-                        fill: true
                     }
                 ]
             };

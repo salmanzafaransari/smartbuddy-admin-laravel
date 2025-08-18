@@ -161,7 +161,6 @@ class chatbotController extends Controller
         // Save or update preference
         ChatbotPreference::updateOrCreate(
             ['chatbot_id' => $validated['chatbot_id']],
-            ['user_id' => $validated['user_id']],
             $validated
         );
         // Fetch chatbot details from DB

@@ -11,6 +11,8 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ChatbotController;
 use App\Http\Controllers\ChatbotApiController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\TrackerController;
+use App\Http\Controllers\DashboardController;
 
 // Auth::routes(['verify' => true]);
 
@@ -33,15 +35,17 @@ Route::post('/email/verification-notification', function (\Illuminate\Http\Reque
     return back()->with('message', 'Verification link sent!');
 })->middleware(['auth', 'throttle:6,1'])->name('verification.send');
 
-Route::get('/dashboard', function () {
-     return view('home');
-})->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/dashboard/usage-by-year', [DashboardController::class,'usageByYear'])->name('dashboard.usageByYear');
+
     Route::get('/profile', [ProfileController::class, 'profile'])->name('profile');
     Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('editProfile');
     Route::post('/profile/edit', [ProfileController::class, 'update'])->name('profile.update');
     Route::get('/profile/setting', [ProfileController::class, 'setting'])->name('setting');
+
+    Route::post('/user/change-password', [UserController::class, 'changePassword'])->name('user.changePassword');
 
     Route::post('/account/send-delete-code', [ProfileController::class, 'sendDeleteCode'])->name('account.sendDeleteCode');
     Route::post('/account/delete', [ProfileController::class, 'deleteAccount'])->name('account.delete');
@@ -66,6 +70,9 @@ Route::middleware(['auth', 'superuser'])->group(function () {
     Route::get('/admin/users/list', [UserController::class, 'getUsers'])->name('users.list');
     Route::get('/admin/users/count', [UserController::class, 'countUsers'])->name('users.count');
     Route::get('/admin/track', [UserController::class, 'tracker'])->name('users.track');
+    Route::get('/admin/track-list', [TrackerController::class, 'trackerList'])->name('tracker.trackList');
+    Route::get('/admin/trackCount', [TrackerController::class, 'trackerCount'])->name('tracker.trackCount');
+    Route::get('/admin/tracker/details/{id}', [TrackerController::class, 'trackerDetails'])->name('tracker.trackerDetails');
 });
 
 

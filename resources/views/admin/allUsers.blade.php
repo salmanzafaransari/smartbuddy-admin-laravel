@@ -85,7 +85,7 @@
                     <tr>
                         <th>User</th>
                         <th>Email</th>
-                        <th>Chatbot</th>
+                        <th>Chatbot[s]</th>
                         <th>Last Login</th>
                         <th>Register on</th>
                         <th>Actions</th>

@@ -29,9 +29,7 @@
   width: 100%;
   height:100%;
  }
- .bg-gredient{
-  background: linear-gradient(135deg, rgb(102, 126, 234) 0%, rgb(118, 75, 162) 100%);
- }
+
  .fix-height{
   height:70px;
  }

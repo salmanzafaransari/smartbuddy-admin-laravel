@@ -95,7 +95,12 @@ class ProfileController extends Controller
     }
     public function setting()
     {
-        return view('profile.setting');
+        $user = Auth::user();
+        $lastChanged = $user->password_changed_at ?? $user->created_at;
+        $daysAgo = Carbon::now()->diffInDays($lastChanged);
+        return view('profile.setting', [
+            'lastPasswordChange' => $daysAgo
+        ]);
     }
     public function sendDeleteCode(Request $request){
         $code = rand(100000, 999999);

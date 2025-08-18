@@ -23,7 +23,7 @@ document.addEventListener("DOMContentLoaded", function () {
               user_id: parsed.user_id,
               chatbot_id: parsed.chat_bot,
               website: window.location.origin,
-              page: document.referrer
+              page: window.location.href
             }
           )
         });

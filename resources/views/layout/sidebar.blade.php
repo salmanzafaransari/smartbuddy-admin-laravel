@@ -18,17 +18,17 @@
                     <div class="menu-section-title">Administration</div>
                     <ul class="menu-items">
                         <li class="menu-item">
-                            <a href="{{route('users.index')}}" class="menu-link">
+                            <a href="{{route('users.index')}}" class="menu-link {{ request()->routeIs('users.index') ? 'active' : '' }}">
                                 <i class="fas fa-users menu-icon"></i>
                                 <span class="menu-text">User Management</span>
-                                <span class="menu-badge" id="allUserCount">loading</span>
+                                <span class="menu-badge" id="allUserCount">0</span>
                             </a>
                         </li>
                         <li class="menu-item">
-                            <a href="{{route('users.track')}}" class="menu-link">
+                            <a href="{{route('users.track')}}" class="menu-link {{ request()->routeIs('users.track') ? 'active' : '' }}">
                                 <i class="fas fa-location menu-icon"></i>
                                 <span class="menu-text">Tracker</span>
-                                <span class="menu-badge" id="allPageCount">loading</span>
+                                <span class="menu-badge" id="allTrackerCount">0</span>
                             </a>
                         </li>
                     </ul>
@@ -79,7 +79,7 @@
                 <div class="menu-section-title">User</div>
                 <ul class="menu-items">
                     <li class="menu-item">
-                        <a href="{{route('profile')}}" class="menu-link">
+                        <a href="{{route('profile')}}" class="menu-link {{ request()->routeIs('profile') ? 'active' : '' }}">
                             <i class="fas fa-user menu-icon"></i>
                             <span class="menu-text">Profile</span>
                         </a>
