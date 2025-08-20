@@ -13,6 +13,7 @@ use App\Http\Controllers\ChatbotApiController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\TrackerController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\BlogController;
 
 // Auth::routes(['verify' => true]);
 
@@ -73,7 +74,26 @@ Route::middleware(['auth', 'superuser'])->group(function () {
     Route::get('/admin/track-list', [TrackerController::class, 'trackerList'])->name('tracker.trackList');
     Route::get('/admin/trackCount', [TrackerController::class, 'trackerCount'])->name('tracker.trackCount');
     Route::get('/admin/tracker/details/{id}', [TrackerController::class, 'trackerDetails'])->name('tracker.trackerDetails');
+
+    Route::get('admin/blogs', [BlogController::class, 'adminBlogList'])->name('admin.blogs.index');
+    Route::get('admin/getBlogs', [BlogController::class, 'getBlogsAdmin'])->name('getBlogs');
+    Route::get('admin/blog/create', [BlogController::class, 'createBlog'])->name('admin.blog.create');
+    Route::delete('/admin/blogs/{id}', [BlogController::class, 'destroy'])->name('admin.blogs.destroy');
+    Route::get('/admin/blogs/{id}/edit', [BlogController::class, 'edit'])->name('admin.blogEdit');
+    Route::put('/admin/blogs/{id}', [BlogController::class, 'update'])->name('admin.blogUpdate');
+    
+    // image upload to coudinary
+    Route::post('/blogs/upload-image', [BlogController::class, 'uploadImage'])->name('blogs.upload.image');
+   
+    // AJAX CRUD
+    Route::post('blog', [BlogController::class, 'store'])->name('admin.blog.store');
+    Route::get('blog/{blog}', [BlogController::class, 'show'])->name('admin.blogSingle');
 });
+
+// Route::get('/blogs', function () {return view('frontend.bloglist');})->name('blogs');
+Route::get('/blogs', [BlogController::class, 'HhomeBlogList'])->name('blogs');
+Route::get('/{blogSlug}/blog',[BlogController::class, 'show'])->name('blogSingle');
+
 
 
 
@@ -95,6 +115,7 @@ Route::post('reset-password', [ResetPasswordController::class, 'reset'])->name('
 Route::get('auth/google', [GoogleController::class, 'redirectToGoogle'])->name('google.login');
 Route::get('auth/google/callback', [GoogleController::class, 'handleGoogleCallback']);
 
-// Route::get('/log-in', function () {
-//     return view('log-in')->name('login');
+// Route::get('/', function () {
+//     return view('frontend.index')->name('homepage');
 // });
+Route::get('/', function () {return view('frontend.index');})->name('homepage');

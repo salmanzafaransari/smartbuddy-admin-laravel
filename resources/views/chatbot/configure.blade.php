@@ -178,6 +178,12 @@ padding: 5px 10px;
                             @endif
                         </div>
                         <div class="card-body">
+                            @if($chatbot->api && $chatbot->api->access_token)
+                                <div class="alert alert-warning">
+                                    <i class="fas fa-book"></i>
+                                    <i><strong>Note:</strong> If you regenerate your access token, your bot will not be able to answer any queries until you replace the CSS and JS files.</i>
+                                </div>
+                            @endif
                             <div class="api-key-list" id="api-key-list-{{ $chatbot->id }}">
                                 @if($chatbot->api && $chatbot->api->access_token)
                                     <div class="api-key-item">
@@ -198,12 +204,7 @@ padding: 5px 10px;
                                 <i class="fas fa-info-circle"></i>
                                 <strong>Important:</strong> Keep your API keys secure and never share them publicly,
                             </div>
-                            @if($chatbot->api && $chatbot->api->access_token)
-                                <div class="alert alert-warning">
-                                    <i class="fas fa-book"></i>
-                                    <i><strong>Note:</strong> If you regenerate your access token, your bot will not be able to answer any queries until you replace the CSS and JS files.</i>
-                                </div>
-                            @endif
+                            
                         </div>
                     </div>
                     <div class="tab-pane fade" id="nav-prefence" role="tabpanel" aria-labelledby="nav-prefence-tab">

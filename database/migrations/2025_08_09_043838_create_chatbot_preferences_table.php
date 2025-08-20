@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('chatbot_preferences', function (Blueprint $table) {
             $table->id();
             $table->foreignId('chatbot_id')->constrained()->onDelete('cascade');
+            $table->string('theme');
             $table->string('primary_color');
             $table->string('user_bubble');
             $table->string('bot_bubble');

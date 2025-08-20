@@ -490,19 +490,19 @@
         /**
          * Simulate real-time notifications
          */
-        function simulateRealtimeNotification() {
-            const notifications = [
-                { message: 'New API key generated successfully', type: 'success' },
-                { message: 'Model training progress: 75% complete', type: 'info' },
-                { message: 'Storage usage warning: 85% full', type: 'warning' },
-                { message: 'Daily backup completed', type: 'success' }
-            ];
+        // function simulateRealtimeNotification() {
+        //     const notifications = [
+        //         { message: 'New API key generated successfully', type: 'success' },
+        //         { message: 'Model training progress: 75% complete', type: 'info' },
+        //         { message: 'Storage usage warning: 85% full', type: 'warning' },
+        //         { message: 'Daily backup completed', type: 'success' }
+        //     ];
             
-            if (Math.random() > 0.5) { // 50% chance of showing notification
-                const notification = notifications[Math.floor(Math.random() * notifications.length)];
-                AIKIT.showNotification(notification.message, notification.type);
-            }
-        }
+        //     if (Math.random() > 0.5) { // 50% chance of showing notification
+        //         const notification = notifications[Math.floor(Math.random() * notifications.length)];
+        //         AIKIT.showNotification(notification.message, notification.type);
+        //     }
+        // }
 
         /**
          * Export dashboard functions for external use

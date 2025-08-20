@@ -13,7 +13,7 @@
                  </div>
                  <div class="stat-content">
                      <h3 class="stat-number">{{ $totalModels }}</h3>
-                     <p class="stat-label">AI Models</p>
+                     <p class="stat-label">ChatBots</p>
                  </div>
              </div>
          </div>
@@ -35,7 +35,7 @@
                  </div>
                  <div class="stat-content">
                      <h3 class="stat-number">{{ $avgResponseTime }}</h3>
-                     <p class="stat-label">Average Response Time</p>
+                     <p class="stat-label">Average Response Time (MS)</p>
                  </div>
              </div>
          </div>

@@ -33,6 +33,28 @@
                         </li>
                     </ul>
                 </div>
+
+                <div class="menu-section">
+                <div class="menu-section-title">Blog Management</div>
+                <ul class="menu-items">
+                    <li class="menu-item">
+                        <a href="{{route('admin.blogs.index')}}" class="menu-link {{ request()->routeIs('admin.blogs.index') ? 'active' : '' }}">
+                            <i class="fas fa-blog menu-icon"></i>
+                            <span class="menu-text">Blogs</span>
+                        </a>
+                        <ul class="submenu-items">
+                            <li><a href="{{route('admin.blog.create')}}" class="submenu-link">
+                                <i class="fas fa-id-card submenu-icon"></i>
+                                <span class="menu-text">Create New Blog</span>
+                            </a></li>
+                            <li><a href="{{route('admin.blogs.index')}}" class="submenu-link">
+                                <i class="fas fa-list submenu-icon"></i>
+                                <span class="menu-text">Blog List</span>
+                            </a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
                 @endif
             @endauth
             <!-- Main Navigation -->
